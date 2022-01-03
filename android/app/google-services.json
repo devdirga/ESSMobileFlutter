@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "994486369445",
+    "project_id": "ess-tps-mobile",
+    "storage_bucket": "ess-tps-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:994486369445:android:104a82c9cfafa36b2de14c",
+        "android_client_info": {
+          "package_name": "com.tps.ess_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "994486369445-9uosjtc44al2qadr44d60n5g30dmjqgo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIiEkPwOyeZ4GXZ_afpBTg8uiU6gDf6sI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "994486369445-9uosjtc44al2qadr44d60n5g30dmjqgo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
