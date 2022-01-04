@@ -9,7 +9,7 @@ import 'package:ess_mobile/models/master_model.dart';
 
 class MasterService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> gender() async {
     var _apiResponse = ApiResponse.loading('Fetching Gender');

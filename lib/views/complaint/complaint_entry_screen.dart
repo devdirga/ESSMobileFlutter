@@ -370,9 +370,6 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderTextField(
                           name: 'EmailCC',
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                          ]),
                           onChanged: (val) {},
                         ),
                       ),

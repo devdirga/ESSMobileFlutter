@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -58,7 +60,9 @@ class _AppbrowserState extends State<Appbrowser> {
                   Expanded(
                     child: WebView(
                       initialUrl: _browserData['link'].toString(),
-                      javascriptMode: JavascriptMode.unrestricted
+                      javascriptMode: JavascriptMode.unrestricted,
+                      gestureRecognizers: Set()
+                        ..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
                     )
                   )
                 ]

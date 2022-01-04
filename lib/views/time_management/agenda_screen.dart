@@ -126,9 +126,6 @@ class _AgendaScreenState extends State<AgendaScreen> {
               ? AppDataTable(
                   columns: <DataColumn>[
                     DataColumn(
-                      label: Text(''),
-                    ),
-                    DataColumn(
                       label: Text(
                         AppLocalizations.of(context)
                             .translate('Name'),
@@ -138,13 +135,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
                       label: Text(
                         AppLocalizations.of(context).translate('Schedule'),
                       ),
+                    ),
+                    DataColumn(
+                      label: Text(''),
                     )
                   ],
                   rows: _dataRows,
                   columnWidths: {
-                    0: FixedColumnWidth(55),
-                    1: FlexColumnWidth(),
-                    2: FixedColumnWidth(145)
+                    0: FlexColumnWidth(),
+                    1: FixedColumnWidth(145),
+                    2: FixedColumnWidth(55)
                   },
                 )
               : AppLoading();
@@ -175,6 +175,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
     */
 
     return <DataCell>[
+      DataCell(Text(item.name.toString())),
+      DataCell(Text(item.updateBy.toString().replaceAll('@ ', '\n'))),
       DataCell(PopupMenuButton(
         icon: Icon(
           Icons.more_vert,
@@ -209,9 +211,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             });
           }
         },
-      )),
-      DataCell(Text(item.name.toString())),
-      DataCell(Text(item.updateBy.toString().replaceAll('@ ', '\n'))),
+      ))
     ];
   }
 }

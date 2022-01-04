@@ -11,7 +11,7 @@ import 'package:ess_mobile/services/master_service.dart';
 
 class CommonService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
   late String _localPath;
 
   MasterService _masterService = MasterService();

@@ -195,9 +195,6 @@ class _PayslipScreenState extends State<PayslipScreen> {
                   child: AppDataTable(
                     columns: <DataColumn>[
                       DataColumn(
-                        label: Text(''),
-                      ),
-                      DataColumn(
                         label: Text(
                           AppLocalizations.of(context).translate('ProcessID'),
                         ),
@@ -212,13 +209,16 @@ class _PayslipScreenState extends State<PayslipScreen> {
                           AppLocalizations.of(context).translate('Period'),
                         ),
                       ),
+                      DataColumn(
+                        label: Text(''),
+                      ),
                     ],
                     rows: _dataRows,
                     columnWidths: {
-                      0: FixedColumnWidth(50),
-                      1: FixedColumnWidth(120),
+                      0: FixedColumnWidth(120),
+                      1: FlexColumnWidth(),
                       2: FlexColumnWidth(),
-                      3: FlexColumnWidth()
+                      3: FixedColumnWidth(55),
                     },
                   ),
                 ),
@@ -244,6 +244,9 @@ class _PayslipScreenState extends State<PayslipScreen> {
     String _period = DateFormat('MMM yyyy').format(_monthYear);
 
     return <DataCell>[
+      DataCell(Text(item.processID.toString())),
+      DataCell(Text(item.cycleTimeDescription.toString())),
+      DataCell(Text(_period)),
       DataCell(PopupMenuButton(
         icon: Icon(
           Icons.more_vert,
@@ -290,9 +293,6 @@ class _PayslipScreenState extends State<PayslipScreen> {
           }
         },
       )),
-      DataCell(Text(item.processID.toString())),
-      DataCell(Text(item.cycleTimeDescription.toString())),
-      DataCell(Text(_period)),
     ];
   }
 }

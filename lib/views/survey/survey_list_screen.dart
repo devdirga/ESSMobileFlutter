@@ -197,9 +197,11 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
           radius: 14,
           backgroundColor:
               Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: Icon(Icons.checklist, color: Colors.black)
+          child: item.alreadyFilled! ? Icon(Icons.stop, color: Colors.black) : Icon(Icons.play_arrow, color: Colors.green)
         ),
-        onTap: ()  {
+        onTap: (item.alreadyFilled!)
+          ? null
+          : () {
           Navigator.pushNamed(
             context,
             Routes.appbrowser,

@@ -451,7 +451,7 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
                                       Routes.downloader,
                                       arguments: {
                                         'name':
-                                            '(${_init['Subject']}) Ticket File',
+                                            '(${_init['TicketNumber']}) File',
                                         'link':
                                             '${globals.apiUrl}/ess/complaint/MDownload/${_init['Id']}/${_init['Filename']}',
                                       },

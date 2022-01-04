@@ -199,9 +199,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                   sortColumnIndex: _sortColumnIndex,
                   columns: <DataColumn>[
                     DataColumn(
-                      label: Text(''),
-                    ),
-                    DataColumn(
                       label: Text(
                         AppLocalizations.of(context).translate('Ticket'),
                       ),
@@ -225,6 +222,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       ),
                       onSort: _onSort
                     ),
+                    DataColumn(
+                      label: Text(''),
+                    )
                   ],
                   rows: _listComplaint
                   .asMap().map(
@@ -257,16 +257,16 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   }
 
   void _onSort(int columnIndex, bool ascending) {
-    if (columnIndex == 1) {
+    if (columnIndex == 0) {
       _listComplaint.sort((comp1, comp2) =>
           compareString(ascending, '${comp1.ticketNumber}', '${comp2.ticketNumber}'));
-    } else if (columnIndex == 2) {
+    } else if (columnIndex == 1) {
       _listComplaint.sort((comp1, comp2) =>
           compareString(ascending, '${comp1.ticketType}', '${comp2.ticketType}'));
-    } else if (columnIndex == 3) {
+    } else if (columnIndex == 2) {
       _listComplaint.sort((comp1, comp2) =>
           compareString(ascending, '${comp1.ticketStatus}', '${comp2.ticketStatus}'));
-    } else if (columnIndex == 4) {
+    } else if (columnIndex == 3) {
       _listComplaint.sort((comp1, comp2) =>
           compareString(ascending, '${comp1.createdDate}', '${comp2.createdDate}'));
     }
@@ -587,6 +587,37 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     );
 
     return <DataCell>[
+      DataCell(
+        item.subject.toString().length > 14 
+        ? Text(item.ticketNumber.toString()+'\n'+item.subject.toString().substring(0,12)+'..', style: _textStyle)
+        : Text(item.ticketNumber.toString()+'\n'+item.subject.toString(), style: _textStyle)
+      ),
+      DataCell(Text(_listType[item.ticketType!], style: _textStyle)),
+      //DataCell(Text(_listStatus[item.ticketStatus!], style: _textStyle)),
+      /*DataCell(Tooltip(
+        message: _type[item.ticketType!],
+        preferBelow: false,
+        child: CircleAvatar(
+          radius: 14,
+          backgroundColor:
+              Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
+          child: Icon(_iconType[item.ticketType!], color: _colorType[item.ticketType!]),
+        ),
+      )),*/
+      DataCell(Tooltip(
+        message: _status[item.ticketStatus!],
+        preferBelow: false,
+        child: CircleAvatar(
+          radius: 14,
+          backgroundColor:
+              Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
+          child: Icon(_iconStatus[item.ticketStatus!], color: _colorStatus[item.ticketStatus!]),
+        ),
+      )),
+      DataCell(Text(DateFormat('dd-MM-yyyy\nHH:mm').format(_createdDate),
+          style: _textStyle)),
+      //DataCell(Text(DateFormat('EEEE').format(_loggedDate), style: _textStyle)),
+      //DataCell(Text(_scheduledDate.replaceAll('00:00', ''), style: _textStyle)),
       DataCell(PopupMenuButton(
         icon: Icon(
           Icons.more_vert,
@@ -622,38 +653,6 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           }
         },
       )),
-      DataCell(
-        item.subject.toString().length > 14 
-        ? Text(item.ticketNumber.toString()+'\n'+item.subject.toString().substring(0,12)+'..', style: _textStyle)
-        : Text(item.ticketNumber.toString()+'\n'+item.subject.toString(), style: _textStyle)
-      ),
-      DataCell(Text(_listType[item.ticketType!], style: _textStyle)),
-      //DataCell(Text(_listStatus[item.ticketStatus!], style: _textStyle)),
-      /*DataCell(Tooltip(
-        message: _type[item.ticketType!],
-        preferBelow: false,
-        child: CircleAvatar(
-          radius: 14,
-          backgroundColor:
-              Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: Icon(_iconType[item.ticketType!], color: _colorType[item.ticketType!]),
-        ),
-      )),*/
-      DataCell(Tooltip(
-        message: _status[item.ticketStatus!],
-        preferBelow: false,
-        child: CircleAvatar(
-          radius: 14,
-          backgroundColor:
-              Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: Icon(_iconStatus[item.ticketStatus!], color: _colorStatus[item.ticketStatus!]),
-        ),
-      )),
-      DataCell(Text(DateFormat('dd-MM-yyyy\nHH:mm').format(_createdDate),
-          style: _textStyle)),
-      //DataCell(Text(DateFormat('EEEE').format(_loggedDate), style: _textStyle)),
-      //DataCell(Text(_scheduledDate.replaceAll('00:00', ''), style: _textStyle)),
-      
     ];
   }
 

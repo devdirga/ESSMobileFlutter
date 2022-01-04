@@ -362,9 +362,6 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                         FormBuilderTextField(
                           name: 'EmailCC',
                           enabled: false,
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                          ]),
                           onChanged: (val) {},
                         ),
                       ),
