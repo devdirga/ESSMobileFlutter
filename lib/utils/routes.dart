@@ -178,6 +178,6 @@ class Routes {
     resolutionEntry: (BuildContext context) => ResolutionEntryScreen(),
     ticketCategories: (BuildContext context) => TicketCategoriesScreen(),
     survey: (BuildContext context) => SurveyScreen(),
-    attendance: (BuildContext context) => AttendanceScreen(),
+    attendance: (BuildContext context) => AttendanceScreen(selectedPage: 0,),
   };
 }

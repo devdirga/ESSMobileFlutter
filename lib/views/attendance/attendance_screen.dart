@@ -9,12 +9,56 @@ import 'package:ess_mobile/utils/localizations.dart';
 import 'package:ess_mobile/utils/routes.dart';
 import 'package:ess_mobile/views/attendance/checkinout_screen.dart';
 
-class AttendanceScreen extends StatefulWidget {
-  @override
-  _AttendanceScreenState createState() => _AttendanceScreenState();
-}
+class AttendanceScreen extends StatelessWidget {
 
+  dynamic _filterReq;
+  int selectedPage;
+  AttendanceScreen({required this.selectedPage});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        initialIndex: selectedPage,
+        length: 2,
+        child: AppScaffold(
+            navBar: NavBar(
+              title: Text(AppLocalizations.of(context).translate('Attendance')),
+              bottom: TabBar(
+                tabs: [
+                  Tab(
+                    icon: Icon(Icons.poll),
+                    text: AppLocalizations.of(context).translate('Absence'),
+                  ), 
+                  Tab(
+                    icon: Icon(Icons.history),
+                    text: AppLocalizations.of(context)
+                        .translate('Absence History'),
+                  )                  
+                ],
+              ),
+            ),
+            main: TabBarView(
+              children: [
+                ChechInOutScreen(_filterReq),
+                LazyLoadingPage()
+              ],
+            ),
+            drawer: AppDrawer(tokenUrl: globals.appAuth.data)
+        )
+    );
+  }
+  
+  // int selectedPage = 0;
+  // AttendanceScreen(this.selectedPage);
+
+
+  // @override
+  // _AttendanceScreenState createState() => _AttendanceScreenState();
+
+}
+/* 
 class _AttendanceScreenState extends State<AttendanceScreen> {
+  
   dynamic _filterReq;
 
   @override
@@ -46,25 +90,26 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               bottom: TabBar(
                 tabs: [
                   Tab(
-                    icon: Icon(Icons.history),
-                    text: AppLocalizations.of(context)
-                        .translate('Absence History'),
-                  ),
-                  Tab(
                     icon: Icon(Icons.poll),
                     text: AppLocalizations.of(context).translate('Absence'),
                   ), 
+                  Tab(
+                    icon: Icon(Icons.history),
+                    text: AppLocalizations.of(context)
+                        .translate('Absence History'),
+                  )                  
                 ],
               ),
             ),
             main: TabBarView(
               children: [
-                LazyLoadingPage(),
-                ChechInOutScreen(_filterReq)
-                
+                ChechInOutScreen(_filterReq),
+                LazyLoadingPage()
               ],
             ),
-            drawer: AppDrawer(tokenUrl: globals.appAuth.data)));
+            drawer: AppDrawer(tokenUrl: globals.appAuth.data)
+        )
+    );
   }
 
   @override
@@ -72,3 +117,4 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     super.dispose();
   }
 }
+ */

@@ -5,6 +5,7 @@ import 'package:ess_mobile/models/user_model.dart';
 import 'package:ess_mobile/services/attendance_service.dart';
 import 'package:ess_mobile/services/survey_service.dart';
 import 'package:ess_mobile/utils/api_response.dart';
+import 'package:ess_mobile/views/attendance/attendance_screen.dart';
 import 'package:ess_mobile/widgets/loadingtext.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
   void initState() {
     super.initState();
     
-    _surveyService.surveys(globals.getFilterRequest()).then((res) {
+    /* _surveyService.surveys(globals.getFilterRequest()).then((res) {
       if (res.status == ApiStatus.COMPLETED){
         if (res.data.data.length > 0){
           List<Map<String, dynamic>> entitySurvey = [];
@@ -66,7 +67,9 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
           getCurrentLocation();
         }
       }
-    });
+    }); */
+
+    getCurrentLocation();
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status != AppStatus.Authenticated) {
@@ -186,6 +189,17 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                         ]
                       ) :  AppLoadingText(loadingMessage: 'Rendering map ...')
                     ), 
+                    Flexible(
+                      child: Container(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: (){},
+                          label: Text('Current location : ${currentLocation.latitude.toString()} , ${currentLocation.longitude.toString()}'),
+                          icon: Icon(Icons.info_outlined),
+                          style: ElevatedButton.styleFrom(primary: Colors.black)
+                        )
+                      )
+                    ),
                     Flexible(
                       flex: 2,
                       child: (nearest.length > 0) ?
@@ -386,6 +400,8 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                     behavior: SnackBarBehavior.floating
                   )
               );
+              // to another tab
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
             }
             if (upl.data['StatusCode'] == 400) {
               AppSnackBar.danger(context, upl.data['Message'].toString());
@@ -433,6 +449,8 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                   behavior: SnackBarBehavior.floating
                 )
             );
+            // to another tab
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
           }
           if (upl.data['StatusCode'] == 400) {
             AppSnackBar.danger(context, upl.data['Message'].toString());
