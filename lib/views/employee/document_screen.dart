@@ -122,9 +122,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
           return (snapshot.connectionState == ConnectionState.done)
               ? AppDataTable(
                   columns: <DataColumn>[
-                    DataColumn(
-                      label: Text(''),
-                    ),
                     // DataColumn(
                     //   label: Text(''),
                     // ),
@@ -137,6 +134,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
                       label: Text(
                         AppLocalizations.of(context).translate('Description'),
                       ),
+                    ),
+                    DataColumn(
+                      label: Text(''),
                     ),
                     //DataColumn(
                     //  label: Text(
@@ -151,8 +151,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
                   ],
                   rows: _dataRows,
                   columnWidths: {
-                    0: FlexColumnWidth(1),
-                    1: FlexColumnWidth(7)
+                    0: FlexColumnWidth(7),
+                    1: FlexColumnWidth(1),
                   }
                 )
               : AppLoading();
@@ -174,6 +174,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     //    .toLocal();
 
     return <DataCell>[
+      DataCell(Text(item.description.toString())),
       DataCell(PopupMenuButton(
         icon: Icon(
           Icons.more_vert,
@@ -227,7 +228,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
       //   child: Icon(_icons[item.status!], color: _colors[item.status!]),
       // )),
       // DataCell(Text(item.documentType.toString())),
-      DataCell(Text(item.description.toString())),
       // DataCell(Text(DateFormat('dd MMM yyyy').format(_createdDate))),
       // DataCell(Container(
       //   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

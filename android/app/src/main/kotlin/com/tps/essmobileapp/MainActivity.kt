@@ -1,4 +1,4 @@
-package com.tps.ess_mobile
+package com.tps.essmobileapp
 
 import io.flutter.embedding.android.FlutterActivity
 

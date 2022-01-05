@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:994486369445:android:104a82c9cfafa36b2de14c",
+        "mobilesdk_app_id": "1:994486369445:android:d045916139022dfe2de14c",
         "android_client_info": {
-          "package_name": "com.tps.ess_mobile"
+          "package_name": "com.tps.essmobileapp"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "994486369445-9uosjtc44al2qadr44d60n5g30dmjqgo.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "994486369445-romkgs1q9sqi4m8iteqqrsivqtea7sta.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tps.essmobileapp"
+              }
             }
           ]
         }

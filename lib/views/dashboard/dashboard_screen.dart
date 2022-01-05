@@ -347,7 +347,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Colors.redAccent, Colors.deepOrangeAccent],
+            colors: [Colors.teal, Colors.tealAccent.shade400],
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),

@@ -38,7 +38,7 @@ android {
         configurations.all {
             resolutionStrategy { force 'androidx.work:work-runtime:2.6.0' }
         }
-        applicationId "com.tps.ess_mobile"
+        applicationId "com.tps.essmobileapp"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
