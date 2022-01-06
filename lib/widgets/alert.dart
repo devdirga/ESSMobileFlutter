@@ -190,6 +190,57 @@ class AppAlert {
     ).show();
   }
 
+  basicAlert({
+    String title = '',
+    String desc = '',
+    Function? yes,
+    Function? cancel,
+  }) async {
+    Alert(
+      context: context,
+      type: AlertType.info,
+      style: AlertStyle(
+        isCloseButton: false,
+        isOverlayTapDismiss: false,
+        animationDuration: Duration(milliseconds: 400),
+        titleStyle: Theme.of(context).textTheme.headline6!,
+        descStyle: Theme.of(context).textTheme.subtitle1!,
+      ),
+      title: title,
+      desc: desc,
+      buttons: [
+        DialogButton(
+          child: Text(
+            AppLocalizations.of(context).translate('OK'),
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.blue,
+          onPressed: () async {
+            Navigator.pop(context);
+
+            if (yes != null) {
+              yes();
+            }
+          },
+        ),
+        DialogButton(
+          child: Text(
+            AppLocalizations.of(context).translate('Cancel'),
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.blue,
+          onPressed: () async {
+            Navigator.pop(context);
+
+            if (cancel != null) {
+              cancel();
+            }
+          },
+        )
+      ],
+    ).show();
+  }
+
   _defaultAlert(
     String title,
     String desc,

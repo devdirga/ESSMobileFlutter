@@ -78,11 +78,26 @@ class _LoginScreenState extends State<LoginScreen> {
           String _latest = v.data.data[0]['Version'];
           int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
           if(_checkVersion == -1){
-            AppAlert(context).updateVersion();
+            AppAlert(context).basicAlert(
+              title: 'Version '+ _latest + ' is available.',
+              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
+              yes: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.downloader,
+                  arguments: {
+                    'name': 'APK ($_latest)',
+                    'link':
+                        '${globals.apiUrl}/ess/administrator/download/android/${v.data.data[0]['Filename']}',
+                  },
+                );
+              }
+            );
+            /*AppAlert(context).updateVersion();
             File getFile = await _commonService.getInstallerFile('Android', v.data.data[0]['Filename']); 
             if(await getFile.exists()){
               OpenFile.open(getFile.path);
-            }
+            }*/
           }
         }
 
@@ -90,11 +105,26 @@ class _LoginScreenState extends State<LoginScreen> {
           String _latest = v.data.data[1]['Version'];
           int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
           if(_checkVersion == -1){
-            AppAlert(context).updateVersion();
+            AppAlert(context).basicAlert(
+              title: 'Version '+ _latest + ' is available.',
+              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
+              yes: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.downloader,
+                  arguments: {
+                    'name': 'IPA ($_latest)',
+                    'link':
+                        '${globals.apiUrl}/ess/administrator/download/ios/${v.data.data[1]['Filename']}',
+                  },
+                );
+              }
+            );
+            /*AppAlert(context).updateVersion();
             File getFile = await _commonService.getInstallerFile('iOS', v.data.data[1]['Filename']); 
             if(await getFile.exists()){
               OpenFile.open(getFile.path);
-            }
+            }*/
           }
         }
       }
