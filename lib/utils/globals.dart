@@ -61,11 +61,11 @@ int compareVersion(String v1, String v2) {
   List<String> _version1 = v1.split('.');
   List<String> _version2 = v2.split('.');
   int k = min(_version1.length, _version2.length);
-  for (var i = 0; i <= k; i++) {
+  for (var i = 0; i < k; i++) {
     int _vers1 = int.parse(_version1[i], radix: 10);
     int _vers2 = int.parse(_version2[i], radix: 10);
     if (_vers1 > _vers2) return 1;
-    if (_vers1 > _vers2)  return -1;
+    if (_vers1 < _vers2) return -1;
   }
   return _version1.length == _version2.length ? 0 : (_version1.length < _version2.length ? -1 : 1);
 }

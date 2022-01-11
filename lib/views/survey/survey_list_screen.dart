@@ -146,7 +146,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                     ),
                     DataColumn(
                       label: Text(
-                        AppLocalizations.of(context).translate('Recurrent'),
+                        AppLocalizations.of(context).translate('Required'),
                       ),
                     )
                   ],
@@ -214,7 +214,14 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
       )),
       DataCell(Text(item.title.toString(), style: _textStyle)),
       DataCell(Text(_scheduledDate.toString(), style: _textStyle)),
-      DataCell(Text(_recurrent[item.recurrent!], style: _textStyle))
+      //DataCell(Text(_recurrent[item.recurrent!], style: _textStyle)),
+      DataCell(CircleAvatar(
+          radius: 14,
+          backgroundColor:
+              Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
+          child: item.isRequired! ? Icon(Icons.check_box_outline_blank, color: Colors.black) : Icon(Icons.check_box, color: Colors.green)
+        )
+      ),
     ];
   }
 }
