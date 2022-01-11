@@ -14,7 +14,7 @@ import 'package:ess_mobile/services/master_service.dart';
 
 class SurveyService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
   late String _localPath;
 
   MasterService _masterService = MasterService();

@@ -8,7 +8,7 @@ import 'package:ess_mobile/models/sleep_monitor_model.dart';
 
 class SleepMonitorService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> sleepmonitor(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Sleep Monitor');

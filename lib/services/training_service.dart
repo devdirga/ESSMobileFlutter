@@ -8,7 +8,7 @@ import 'package:ess_mobile/models/training_model.dart';
 
 class TrainingService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> training(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Training');

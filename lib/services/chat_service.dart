@@ -10,7 +10,7 @@ import 'package:ess_mobile/models/chat_model.dart';
 
 class ChatService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> author(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Author');

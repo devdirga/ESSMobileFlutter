@@ -7,7 +7,7 @@ import 'package:ess_mobile/models/warning_letter_model.dart';
 
 class WarningLetterService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> warningLetters(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Warning Letters');

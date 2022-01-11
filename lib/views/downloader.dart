@@ -22,7 +22,7 @@ class Downloader extends StatefulWidget with WidgetsBindingObserver {
 class _DownloaderState extends State<Downloader> {
   AppSharedPreference _sharedPrefsHelper = AppSharedPreference();
   ReceivePort _port = ReceivePort();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   List<Map<String, dynamic>> _documents = [];
   List<_TaskInfo>? _tasks;

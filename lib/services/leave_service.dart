@@ -11,7 +11,7 @@ import 'package:ess_mobile/models/resume_model.dart';
 
 class LeaveService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> calendar(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Leave Calendar');

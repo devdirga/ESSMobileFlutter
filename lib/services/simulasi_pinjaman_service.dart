@@ -11,7 +11,7 @@ import 'package:ess_mobile/utils/api_response.dart';
 
 class SimulasiPinjamanService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> getLoanTypes(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Loan Types');

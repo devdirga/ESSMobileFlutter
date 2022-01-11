@@ -7,7 +7,7 @@ import 'package:ess_mobile/models/employment_model.dart';
 
 class EmploymentService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> employments(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Employments');

@@ -14,7 +14,7 @@ import 'package:ess_mobile/models/electronic_address_model.dart';
 
 class ResumeService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> profile(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Profile');

@@ -11,7 +11,7 @@ import 'package:ess_mobile/models/ticket_category_model.dart';
 
 class ComplaintService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> complaints(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Complaints');

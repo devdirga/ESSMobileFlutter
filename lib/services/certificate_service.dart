@@ -10,7 +10,7 @@ import 'package:ess_mobile/models/certificate_model.dart';
 
 class CertificateService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> certificates(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Certificates');

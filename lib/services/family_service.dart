@@ -10,7 +10,7 @@ import 'package:ess_mobile/models/family_model.dart';
 
 class FamilyService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> families(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Families');

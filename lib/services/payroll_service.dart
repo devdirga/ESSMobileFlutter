@@ -9,7 +9,7 @@ import 'package:ess_mobile/models/loan_period_model.dart';
 
 class PayrollService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> payslip(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Payslip');

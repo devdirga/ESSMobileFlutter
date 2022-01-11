@@ -10,7 +10,7 @@ import 'package:ess_mobile/models/document_model.dart';
 
 class DocumentService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> documents(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Documents');

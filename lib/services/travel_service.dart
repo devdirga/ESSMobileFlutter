@@ -10,7 +10,7 @@ import 'package:ess_mobile/models/travel_model.dart';
 
 class TravelService {
   RestApi _restApi = RestApi();
-  String _apiToken = globals.appAuth.data!;
+  String? _apiToken = globals.appAuth.data;
 
   Future<ApiResponse> travel(Map<String, dynamic> body) async {
     var _apiResponse = ApiResponse.loading('Fetching Travel');
