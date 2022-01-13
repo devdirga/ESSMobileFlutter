@@ -131,9 +131,8 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
         opacity: 0.5,
         progressIndicator: CircularProgressIndicator(),
       ),
-      navigationBar: (_readonly)
-        ? null
-        : BottomNavigationBar(
+      navigationBar: 
+        BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.cancel),
@@ -211,6 +210,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
             _init['FilePicker'] = '';
             _init['TicketMedia'] = _init['TicketMedia'].toString();
             _init['TicketType'] = _init['TicketType'].toString();
+            _init['TicketStatus'] = _init['TicketStatus'].toString();
 
             _init['Category_id'] = null;
 
@@ -225,7 +225,6 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                   autovalidateMode: AutovalidateMode.disabled,
                   initialValue: _init,
                   skipDisabled: false,
-                  enabled: !_readonly,
                   child: Column(
                     children: [
                       (_readonly)
@@ -234,6 +233,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                             true,
                             FormBuilderDateTimePicker(
                               name: 'CreatedDate',
+                              enabled: !_readonly,
                               inputType: InputType.both,
                               format: DateFormat('dd-MM-yyyy HH:mm'),
                               decoration: InputDecoration(
@@ -254,6 +254,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                             true,
                             FormBuilderDateTimePicker(
                               name: 'ClosedDate',
+                              enabled: !_readonly,
                               inputType: InputType.both,
                               format: DateFormat('dd-MM-yyyy HH:mm'),
                               decoration: InputDecoration(
@@ -261,7 +262,6 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                                   //     .translate('IssuingDate'),
                                   ),
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
                               ]),
                               onChanged: (val) {},
                             ),
@@ -273,6 +273,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderDropdown<String>(
                           name: 'TicketType',
+                          enabled: !_readonly,
                           decoration: InputDecoration(
                               // labelText: AppLocalizations.of(context)
                               //     .translate('Relationship'),
@@ -297,6 +298,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderDropdown<String>(
                           name: 'TicketMedia',
+                          enabled: !_readonly,
                           decoration: InputDecoration(
                               // labelText: AppLocalizations.of(context)
                               //     .translate('Relationship'),
@@ -321,6 +323,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderDropdown<String>(
                           name: 'Category_id',
+                          enabled: !_readonly,
                           decoration: InputDecoration(
                               // labelText: AppLocalizations.of(context)
                               //     .translate('Relationship'),
@@ -345,6 +348,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                             true,
                             FormBuilderTextField(
                               name: 'FullName',
+                              enabled: !_readonly,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
                               ]),
@@ -358,6 +362,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderTextField(
                           name: 'Subject',
+                          enabled: !_readonly,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
@@ -370,6 +375,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderTextField(
                           name: 'EmailCC',
+                          enabled: !_readonly,
                           onChanged: (val) {},
                         ),
                       ),
@@ -379,6 +385,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderTextField(
                           name: 'Description',
+                          enabled: !_readonly,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
@@ -389,12 +396,28 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                       (_readonly) ? SizedBox(height: 10) : Container(),
                       (_readonly)
                         ? _formInputGroup(
-                            AppLocalizations.of(context).translate('TicketStatus'),
-                            true,
-                            Chip(
-                              label: Text(_listUpdateStatus.firstWhere((element) => element['Value'] == _init['TicketStatus'])['Name']),
-                            )
-                          )
+                          AppLocalizations.of(context).translate('Status'),
+                          true,
+                          FormBuilderDropdown<String>(
+                            name: 'TicketStatus',
+                            enabled: _readonly,
+                            decoration: InputDecoration(
+                                // labelText: AppLocalizations.of(context)
+                                //     .translate('Relationship'),
+                                ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                            ]),
+                            items: _listUpdateStatus
+                                .map((item) => DropdownMenuItem(
+                                      value: item['Value'].toString(),
+                                      child: Text(item['Name'].toString()),
+                                    ))
+                                .toList(),
+                            onChanged: (val) {},
+                            valueTransformer: (String? val) => val.toString(),
+                          ),
+                        )
                         : Container(),
                       (_readonly) ? SizedBox(height: 10) : Container(),
                       (_readonly)
@@ -403,6 +426,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                         true,
                         FormBuilderTextField(
                           name: 'TicketResolution',
+                          enabled: _readonly,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
@@ -539,8 +563,8 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
         ),
         Padding(
           padding: EdgeInsets.only(top: 10.0),
-          child: (_readonly)
-              ? Theme(
+          child: formInput,
+                /*Theme(
                   data: Theme.of(context).copyWith(
                     textTheme: TextTheme(
                       subtitle1:
@@ -548,8 +572,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                     ),
                   ),
                   child: formInput,
-                )
-              : formInput,
+                ),*/
         ),
       ],
     );
@@ -607,8 +630,10 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
       _data.ticketDate = DateTime.now().toUtc().toIso8601String();
       _data.ticketType = int.parse(value['TicketType']);
       _data.ticketMedia = 4;
-      _data.ticketStatus = 0;
       _data.ticketCategory = null;
+      _data.ticketStatus = value['TicketStatus'] != null ? int.parse(value['TicketStatus']) : 0;
+      _data.ticketResolution = value['TicketResolution'] != null ? value['TicketResolution'] .toString().trim() : '';
+      
       _data.emailTo = [];
       
       _ticketCategory.forEach((v) {
@@ -661,9 +686,51 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
           },
         );
       } else {
-        AppAlert(context).attachment(
-          title: AppLocalizations.of(context).translate('TicketRequest'),
-        );
+        if(_readonly){
+          AppAlert(context).save(
+            title: AppLocalizations.of(context).translate('TicketRequest'),
+            yes: (String? val) async {
+              _data.reason = val.toString().trim();
+
+              setState(() {
+                _disabled = true;
+                _loading = true;
+              });
+
+              ApiResponse<dynamic> upload =
+                  await _complaintService.updateStatus(
+                JsonEncoder().convert(_data.toJson())
+              );
+
+              if (upload.status == ApiStatus.ERROR) {
+                AppSnackBar.danger(context, upload.message);
+              }
+
+              if (upload.status == ApiStatus.COMPLETED) {
+                if (upload.data['StatusCode'] == 200) {
+                  AppSnackBar.success(context, upload.data['Message'].toString());
+                  Navigator.pop(context);
+                }
+
+                if (upload.data['StatusCode'] == 400) {
+                  AppSnackBar.danger(context, upload.data['Message'].toString());
+                }
+              }
+
+              Future.delayed(Duration.zero, () async {
+                setState(() {
+                  _disabled = false;
+                  _loading = false;
+                });
+              });
+            },
+          );
+        }
+        else{
+          AppAlert(context).attachment(
+            title: AppLocalizations.of(context).translate('TicketRequest'),
+          );
+        }
       }
     });
   }

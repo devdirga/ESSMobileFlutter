@@ -11,7 +11,7 @@ import 'package:path/path.dart';
 
 class AttendanceService {
   RestApi rest = RestApi();
-  String token = globals.appAuth.data!;
+  String? token = globals.appAuth.data;
   String ctype = 'Content-Type';
   String appjson = 'application/json';
 

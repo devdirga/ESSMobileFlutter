@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+//import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
@@ -234,7 +234,7 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Future<String> createDynamicLink() async {
+  /*Future<String> createDynamicLink() async {
     var parameters = DynamicLinkParameters(
       uriPrefix: 'https://esstps.page.link',
       link: Uri.parse('https://esstps.page.link.com/kara?token=' + tokenUrl!),
@@ -251,4 +251,5 @@ class AppDrawer extends StatelessWidget {
 
     return shortUrl.toString();
   }
+  */
 }

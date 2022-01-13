@@ -139,7 +139,8 @@ class _AppScaffoldState extends State<AppScaffold> {
       toolbarHeight: widget.navBar?.toolbarHeight,
       actions: (widget.navBar?.actions != null)
           ? widget.navBar?.actions
-          : <Widget>[
+          : context.read<AuthProvider>().status == AppStatus.Authenticated ?
+            <Widget>[
               Stack(
                 children: <Widget>[
                   IconButton(
@@ -334,7 +335,9 @@ class _AppScaffoldState extends State<AppScaffold> {
                 },
               ),
               SizedBox(width: 5.0),
-            ],
+            ]
+            : 
+            <Widget>[],
       backgroundColor: Theme.of(context).primaryColor,
     );
   }

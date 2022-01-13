@@ -38,7 +38,7 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
   Future<ApiResponse<dynamic>>? _resolutions;
   List<ComplaintModel> _listResolution = <ComplaintModel>[];
   List<String> _listType = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
-  List<String> _listStatus = ['Open', 'Progress', 'Closed'];
+  List<String> _listStatus = ['Open', 'Progress', 'Closed', 'Reopen'];
 
   int? _sortColumnIndex;
   bool _isAscending = false;
@@ -53,7 +53,8 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
   List<Map<String, dynamic>> _listUpdateStatus = [
     { 'ID': 0, 'Name': 'Open' },
 	  { 'ID': 1, 'Name': 'Progress' },
-	  { 'ID': 2, 'Name': 'Closed' }
+	  { 'ID': 2, 'Name': 'Closed' },
+    { 'ID': 2, 'Name': 'Reopen' }
   ];
   
   Map<String, dynamic> getValue = {
@@ -421,7 +422,7 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
   void _downloadExcel() async {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1']; 
-    List _status = ['Open', 'Progress', 'Closed'];
+    List _status = ['Open', 'Progress', 'Closed', 'Reopen'];
     List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
 
     sheetObject.appendRow(['Ticket Number', 'Subject', 'Type', 'Status', 'Open Ticket Date', 'Close Ticket Date']);
@@ -542,12 +543,13 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
     item.absenceCode ??= '';
     item.absenceCodeDescription ??= '';*/
 
-    List _status = ['Open', 'Progress', 'Closed'];
+    List _status = ['Open', 'Progress', 'Closed', 'Reopen'];
     List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
     List<Color> _colorStatus = [
       Colors.blue,
       Colors.green,
-      Colors.black
+      Colors.black,
+      Colors.orange
     ];
     List<Color> _colorType = [
       Colors.black,

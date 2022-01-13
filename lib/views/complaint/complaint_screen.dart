@@ -38,7 +38,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   Future<ApiResponse<dynamic>>? _complaints;
   List<ComplaintModel> _listComplaint = <ComplaintModel>[];
   List<String> _listType = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
-  List<String> _listStatus = ['Open', 'Progress', 'Closed'];
+  List<String> _listStatus = ['Open', 'Progress', 'Closed', 'Reopen'];
 
   int? _sortColumnIndex;
   bool _isAscending = false;
@@ -553,12 +553,13 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     item.absenceCode ??= '';
     item.absenceCodeDescription ??= '';*/
 
-    List _status = ['Open', 'Progress', 'Closed'];
+    List _status = ['Open', 'Progress', 'Closed', 'Reopen'];
     List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
     List<Color> _colorStatus = [
       Colors.blue,
       Colors.green,
-      Colors.black
+      Colors.black,
+      Colors.orange
     ];
     List<Color> _colorType = [
       Colors.black,
@@ -569,7 +570,8 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     List<IconData> _iconStatus = [
       Icons.meeting_room,
       Icons.update,
-      Icons.door_front_door
+      Icons.door_front_door,
+      Icons.cached
     ];
     List<IconData> _iconType = [
       Icons.feedback,
