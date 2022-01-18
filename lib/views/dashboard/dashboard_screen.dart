@@ -175,24 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });*/
 
     _refreshNotifBell();
-    
-    _leaveService.leaveInfo(globals.getFilterRequest()).then((v) {
-      if (v.status == ApiStatus.COMPLETED) {
-        if (v.data.data != null) {
-          if (v.data.data.maintenances.length > 0) {
-            if(this.mounted){
-              setState(() {
-                _leaveInfo = [];
-
-                v.data.data.maintenances.forEach((i) {
-                  _leaveInfo.add(i);
-                });
-              });
-            }
-          }
-        }
-      }
-    });
+    _refreshData();
 
     /*
     _trainingService.trainingHistory(globals.getFilterRequest()).then((v) {
@@ -218,108 +201,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
     */
-
-    _timeManagementService
-        .absenceImported(globals.getFilterRequest())
-        .then((v) {
-      if (v.status == ApiStatus.COMPLETED) {
-        if (v.data.data.length > 0) {
-          if (this.mounted) {
-            setState(() {
-              _clockIn = '';
-              _clockOut = '';
-            });
-          }
-        }
-      }
-    });
-
-    _timeManagementService.agenda(globals.getFilterRequest()).then((v) {
-      if (v.status == ApiStatus.COMPLETED) {
-        if (v.data.data.length > 0) {
-          v.data.data.forEach((v) {
-            if (_bannerFile == null) {
-              if (v.agendaType == 1 && v.attachments.length > 0) {
-                _bannerFile = v.attachments[0].pathUrl;
-              }
-            }
-          });
-
-          if (_bannerFile != null) {
-            if (this.mounted) {
-              setState(() {});
-            }
-          }
-        }
-      }
-    });
-
-    _authProvider.checkPasswordStatus(globals.getFilterRequest()).then((v) {
-      if (v.status == ApiStatus.COMPLETED) {
-        if(v.data.message == true){
-          AppSnackBar.warning(context, "Please change your password");
-          Navigator.pushNamed(context, Routes.changePassword);
-        }
-      }
-    });
-
-    _commonService.getLatestVersion().then((v) async {
-      if (v.data.data.length > 0){
-        if(Platform.isAndroid){
-          String _latest = v.data.data[0]['Version'];
-          int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
-          if(_checkVersion == -1){
-            AppAlert(context).basicAlert(
-              title: 'Version '+ _latest + ' is available.',
-              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
-              yes: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.downloader,
-                  arguments: {
-                    'name': 'APK ($_latest)',
-                    'link':
-                        '${globals.apiUrl}/ess/administrator/download/android/${v.data.data[0]['Filename']}',
-                  },
-                );
-              }
-            );
-            /*AppAlert(context).updateVersion();
-            File getFile = await _commonService.getInstallerFile('Android', v.data.data[0]['Filename']); 
-            if(await getFile.exists()){
-              OpenFile.open(getFile.path);
-            }*/
-          }
-        }
-
-        if(Platform.isIOS){
-          String _latest = v.data.data[1]['Version'];
-          int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
-          if(_checkVersion == -1){
-            AppAlert(context).basicAlert(
-              title: 'Version '+ _latest + ' is available.',
-              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
-              yes: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.downloader,
-                  arguments: {
-                    'name': 'IPA ($_latest)',
-                    'link':
-                        '${globals.apiUrl}/ess/administrator/download/ios/${v.data.data[1]['Filename']}',
-                  },
-                );
-              }
-            );
-            /*AppAlert(context).updateVersion();
-            File getFile = await _commonService.getInstallerFile('iOS', v.data.data[1]['Filename']); 
-            if(await getFile.exists()){
-              OpenFile.open(getFile.path);
-            }*/
-          }
-        }
-      }
-    }); 
   }
 
   @override
@@ -336,35 +217,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _container(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          (_bannerFile != null) ? _bannerAgenda() : Container(),
-          Container(
-            height: 200.0,
-            child: Column(
-              children: <Widget>[
-                Flexible(
-                  child: Row(
-                    children: <Widget>[
-                      _todayAttendance(),
-                      _leaveRemainder(),
-                      //_completedTraining(),
-                    ],
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            (_bannerFile != null) ? _bannerAgenda() : Container(),
+            Container(
+              height: 200.0,
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                    child: Row(
+                      children: <Widget>[
+                        _todayAttendance(),
+                        _leaveRemainder(),
+                        //_completedTraining(),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          //_leaveRemainder(),
-          AgendaItems(),
-          //MedicalPlafon(),
-          //MedicalRecord(),
-          TimeAttendance(),
-        ],
-      ),
+            //_leaveRemainder(),
+            AgendaItems(),
+            //MedicalPlafon(),
+            //MedicalRecord(),
+            TimeAttendance(),
+          ],
+        ),
+      )
     );
   }
 
@@ -592,6 +477,128 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       }
     });
+  }
+
+  Future<void> _refreshData() async {
+    _leaveService.leaveInfo(globals.getFilterRequest()).then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data != null) {
+          if (v.data.data.maintenances.length > 0) {
+            if(this.mounted){
+              setState(() {
+                _leaveInfo = [];
+
+                v.data.data.maintenances.forEach((i) {
+                  _leaveInfo.add(i);
+                });
+              });
+            }
+          }
+        }
+      }
+    });
+
+    _timeManagementService
+        .absenceImported(globals.getFilterRequest())
+        .then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          if (this.mounted) {
+            setState(() {
+              _clockIn = '';
+              _clockOut = '';
+            });
+          }
+        }
+      }
+    });
+
+    _timeManagementService.agenda(globals.getFilterRequest()).then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          v.data.data.forEach((v) {
+            if (_bannerFile == null) {
+              if (v.agendaType == 1 && v.attachments.length > 0) {
+                _bannerFile = v.attachments[0].pathUrl;
+              }
+            }
+          });
+
+          if (_bannerFile != null) {
+            if (this.mounted) {
+              setState(() {});
+            }
+          }
+        }
+      }
+    });
+
+    _authProvider.checkPasswordStatus(globals.getFilterRequest()).then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if(v.data.message == true){
+          AppSnackBar.warning(context, "Please change your password");
+          Navigator.pushNamed(context, Routes.changePassword);
+        }
+      }
+    });
+
+    _commonService.getLatestVersion().then((v) async {
+      if (v.data.data.length > 0){
+        if(Platform.isAndroid){
+          String _latest = v.data.data[0]['Version'];
+          int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
+          if(_checkVersion == -1){
+            AppAlert(context).basicAlert(
+              title: 'Version '+ _latest + ' is available.',
+              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
+              yes: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.downloader,
+                  arguments: {
+                    'name': 'APK ($_latest)',
+                    'link':
+                        '${globals.apiUrl}/ess/administrator/download/android/${v.data.data[0]['Filename']}',
+                  },
+                );
+              }
+            );
+            /*AppAlert(context).updateVersion();
+            File getFile = await _commonService.getInstallerFile('Android', v.data.data[0]['Filename']); 
+            if(await getFile.exists()){
+              OpenFile.open(getFile.path);
+            }*/
+          }
+        }
+
+        if(Platform.isIOS){
+          String _latest = v.data.data[1]['Version'];
+          int _checkVersion = globals.compareVersion(globals.packageInfo.version, _latest);
+          if(_checkVersion == -1){
+            AppAlert(context).basicAlert(
+              title: 'Version '+ _latest + ' is available.',
+              desc: 'Your app version is '+ globals.packageInfo.version + '. Please download the latest version.',
+              yes: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.downloader,
+                  arguments: {
+                    'name': 'IPA ($_latest)',
+                    'link':
+                        '${globals.apiUrl}/ess/administrator/download/ios/${v.data.data[1]['Filename']}',
+                  },
+                );
+              }
+            );
+            /*AppAlert(context).updateVersion();
+            File getFile = await _commonService.getInstallerFile('iOS', v.data.data[1]['Filename']); 
+            if(await getFile.exists()){
+              OpenFile.open(getFile.path);
+            }*/
+          }
+        }
+      }
+    }); 
   }
 
   @override

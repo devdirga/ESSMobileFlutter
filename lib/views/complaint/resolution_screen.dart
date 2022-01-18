@@ -54,7 +54,7 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
     { 'ID': 0, 'Name': 'Open' },
 	  { 'ID': 1, 'Name': 'Progress' },
 	  { 'ID': 2, 'Name': 'Closed' },
-    { 'ID': 2, 'Name': 'Reopen' }
+    { 'ID': 3, 'Name': 'Reopen' }
   ];
   
   Map<String, dynamic> getValue = {
@@ -560,7 +560,8 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
     List<IconData> _iconStatus = [
       Icons.meeting_room,
       Icons.update,
-      Icons.door_front_door
+      Icons.door_front_door,
+      Icons.cached
     ];
     List<IconData> _iconType = [
       Icons.feedback,

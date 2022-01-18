@@ -219,7 +219,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
           radius: 14,
           backgroundColor:
               Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: item.isRequired! ? Icon(Icons.check_box_outline_blank, color: Colors.black) : Icon(Icons.check_box, color: Colors.green)
+          child: item.isRequired! ? Icon(Icons.check_box_outline_blank, color: Colors.black) : Icon(Icons.priority_high, color: Colors.red)
         )
       ),
     ];

@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +28,10 @@ class LoanRequestScreen extends StatefulWidget {
 class _LoanRequestScreenState extends State<LoanRequestScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final SimulasiPinjamanService _simLoanService = SimulasiPinjamanService();
+  final CurrencyTextInputFormatter _formatter = CurrencyTextInputFormatter(
+    decimalDigits: 1,
+    name: ''
+  );
 
   List<Map<String, dynamic>> _loanTypes = [];
   List<Map<String, dynamic>> _loanMethods = [];
@@ -205,7 +211,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     true,
                     FormBuilderTextField(
                       name: 'NetIncome',
-                      initialValue: _latestPayment.toString(),
+                      initialValue: _formatter.format(_latestPayment.toString()),
                       keyboardType: TextInputType.number,
                       inputFormatters: [],
                       enabled: false,
@@ -232,9 +238,9 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                         _loanTypes.forEach((e) {
                           if (e["Id"] == val) {
                             _formKey.currentState!.fields['MaximumLoan']!
-                                .didChange(e["MaximumLoan"].toString());
+                                .didChange(_formatter.format(e["MaximumLoan"].toString()));
                             _formKey.currentState!.fields['LoanValue']!
-                                .didChange(e["MaximumLoan"].toString());
+                                .didChange(_formatter.format(e["MaximumLoan"].toString()));
                           }
                         });
                         _formKey.currentState!.fields['LoanPeriod']!.reset();
@@ -261,12 +267,12 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     true,
                     FormBuilderTextField(
                       name: 'LoanValue',
+                      inputFormatters: [ TextInputMask(mask: '9,999,999,999.9', placeholder: '0', maxPlaceHolders: 2, reverse: true)],
                       keyboardType: TextInputType.number,
                       readOnly: false,
                       onChanged: (val) {
                         var _maximumLoan = _formKey.currentState!.fields['MaximumLoan']!.value;
-
-                        if(double.parse(val.toString()) > double.parse(_maximumLoan.toString())){
+                        if(double.parse(val.toString().replaceAll(',','')) > double.parse(_maximumLoan.toString().replaceAll(',',''))){
                           AppSnackBar.danger(context, 'Loan Value should not be greater than Maximum Loan');
                           return;
                         }
@@ -359,6 +365,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     true,
                     FormBuilderTextField(
                       name: 'CompensationValue',
+                      inputFormatters: [ TextInputMask(mask: '9,999,999,999.9', placeholder: '0', maxPlaceHolders: 2, reverse: true)],
                       keyboardType: TextInputType.number,
                       enabled: _enableCompensation,
                       onChanged: (val) {
@@ -509,39 +516,39 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
 
   void _calculateLoan() async{
     var _angsuran = 0.0;
-    var _loanValue = double.parse(_formKey.currentState!.fields['LoanValue']!.value);
+    var _loanValue = double.parse(_formKey.currentState!.fields['LoanValue']!.value.toString().replaceAll(',',''));
     var _periodeLength = double.parse(_formKey.currentState!.fields['LoanLength']!.value != null
       ? _formKey.currentState!.fields['LoanLength']!.value : '1');
-    var _netIncome = double.parse(_formKey.currentState!.fields['NetIncome']!.value);
+    var _netIncome = double.parse(_formKey.currentState!.fields['NetIncome']!.value.toString().replaceAll(',', ''));
     var _compensationValue = double.parse(_formKey.currentState!.fields['CompensationValue']!.value != null
-    ? _formKey.currentState!.fields['CompensationValue']!.value : '0');
+    ? _formKey.currentState!.fields['CompensationValue']!.value.toString().replaceAll(',','') : '0');
     var _interest = double.parse(_formKey.currentState!.fields['Interest']!.value != null
     ? _formKey.currentState!.fields['Interest']!.value : '0.0');
 
     if (_loanTypeId == '1' && _loanMethodId == '1') {
       _angsuran = _loanValue * (((1 + (_interest * _periodeLength)) / _periodeLength));
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome - _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome - _angsuran.round().toDouble()).toString()));
     } else if (_loanTypeId == '1' && _loanMethodId == '2') {
       _angsuran = _loanValue * (((1 + (_interest * _periodeLength)) / _periodeLength));
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome + _compensationValue - _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome + _compensationValue - _angsuran.round().toDouble()).toString()));
     } else if (_loanTypeId == '2' && _loanMethodId == '1') {
       _angsuran = _loanValue * (((1 + (_interest * _periodeLength)) / _periodeLength));
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome - _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome - _angsuran.round().toDouble()).toString()));
     } else if (_loanTypeId == '2' && _loanMethodId == '2') {
       _angsuran = _loanValue * (((1 + (_interest * _periodeLength)) / _periodeLength));
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome + _compensationValue - _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome + _compensationValue - _angsuran.round().toDouble()).toString()));
     } else if (_loanTypeId == '3' && _loanMethodId == '1') {
       _angsuran = _pmtCalculate(_interest, _periodeLength, _loanValue);
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome + _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome + _angsuran.round().toDouble()).toString()));
     } else if (_loanTypeId == "3" && _loanMethodId == '2') {
       _angsuran = _pmtCalculate(_interest, _periodeLength, _loanValue);
-      _formKey.currentState!.fields['InstallmentValue']!.didChange(_angsuran.round().toString());
-      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange((_netIncome + _compensationValue + _angsuran.round().toDouble()).toString());
+      _formKey.currentState!.fields['InstallmentValue']!.didChange(_formatter.format(_angsuran.round().toString()));
+      _formKey.currentState!.fields['IncomeAfterInstallment']!.didChange(_formatter.format((_netIncome + _compensationValue + _angsuran.round().toDouble()).toString()));
     }
   }
 
@@ -581,11 +588,11 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       _data.employeeName = globals.appAuth.user?.fullName;
       
       _data.amount = 0;
-      _data.compensationValue = double.parse(value['CompensationValue']);
-      _data.incomeAfterInstallment = double.parse(value['IncomeAfterInstallment']);
-      _data.installmentValue = double.parse(value['InstallmentValue']);
-      _data.loanValue = double.parse(value['LoanValue']);
-      _data.netIncome = double.parse(value['NetIncome']);
+      _data.compensationValue = double.parse(value['CompensationValue'].toString().replaceAll(',',''));
+      _data.incomeAfterInstallment = double.parse(value['IncomeAfterInstallment'].toString().replaceAll(',',''));
+      _data.installmentValue = double.parse(value['InstallmentValue'].toString().replaceAll(',',''));
+      _data.loanValue = double.parse(value['LoanValue'].toString().replaceAll(',',''));
+      _data.netIncome = double.parse(value['NetIncome'].toString().replaceAll(',',''));
       _data.periodeLength = int.parse(value['LoanLength']);
       _data.requestDate = DateFormat('yyyy-MM-ddTHH:mm:ss').format(DateTime.now());
       _data.type = LoanTypeModel();

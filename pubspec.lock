@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  currency_text_input_formatter:
+    dependency: "direct main"
+    description:
+      name: currency_text_input_formatter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.5"
   dbus:
     dependency: transitive
     description:
@@ -148,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  easy_mask:
+    dependency: "direct main"
+    description:
+      name: easy_mask
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   equatable:
     dependency: transitive
     description:
