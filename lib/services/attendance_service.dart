@@ -87,7 +87,7 @@ class AttendanceService {
   Future<ApiResponse> selfiecheckinout(File f, String d) async {
     var length = await f.length();
     try{
-      final r = http.MultipartRequest('POST', Uri.parse('${globals.apiUrl}/api/absence/inout'));
+      final r = http.MultipartRequest('POST', Uri.parse('${globals.apiUrl}/api/absence/doinoutdev'));
       Map<String, String> h = {HttpHeaders.authorizationHeader:'Bearer $token'};
       r.headers.addAll(h);
       r.fields['JsonData'] = d;
@@ -105,7 +105,7 @@ class AttendanceService {
 
   Future<ApiResponse> biometriccheckinout(String d) async {
     try{
-      final req = http.MultipartRequest('POST', Uri.parse('${globals.apiUrl}/api/absence/inout'));
+      final req = http.MultipartRequest('POST', Uri.parse('${globals.apiUrl}/api/absence/doinoutdev'));
       Map<String, String> h = {HttpHeaders.authorizationHeader:'Bearer $token'};
       req.headers.addAll(h);
       req.fields['JsonData'] = d;

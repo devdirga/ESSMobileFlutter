@@ -6,6 +6,7 @@ import 'package:ess_mobile/services/attendance_service.dart';
 import 'package:ess_mobile/services/survey_service.dart';
 import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/views/attendance/attendance_screen.dart';
+import 'package:ess_mobile/widgets/loading.dart';
 import 'package:ess_mobile/widgets/loadingtext.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -303,7 +304,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                       )
                     )
                   ]
-                ) : AppLoadingText(loadingMessage: 'Check data survey')
+                ) : AppLoading()
               )
             ]
           )
@@ -371,8 +372,22 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
     setState(() {
       _loading = true;
     });
-    await _attendanceService.biometriccheckinout(
-      JsonEncoder().convert(
+    bool temporary = false;
+    await _surveyService.surveys(globals.getFilterRequest()).then((res) {
+      if (res.status == ApiStatus.COMPLETED){
+        if (res.data.data.length > 0){
+          List<Map<String, dynamic>> entitySurvey = [];
+          res.data.data.forEach((i) {
+            entitySurvey.add(i.toJson());
+          });
+          entitySurvey.forEach((element) {
+            if(element['AlreadyFilled']== false && element['IsRequired']== true){
+              temporary = true;
+            }
+          });
+        }       
+
+        _attendanceService.biometriccheckinout(JsonEncoder().convert(
         new AttendanceModel(
           typeID: 'biometric',
           activityTypeID: ((type=="IN") ? _activitytypes.firstWhere((e) => e.name=='Checkin') : _activitytypes.firstWhere((e) => e.name=='Checkout')).id,
@@ -381,83 +396,240 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
           inOut: type,
-          employeeID: globals.appAuth.user!.username.toString()
+          employeeID: globals.appAuth.user!.username.toString(),
+          temporary: temporary
         ).toJson())).then((upl) {
+          setState(() {
+            _loading = false;
+          });
           if (upl.status == ApiStatus.ERROR) {
             AppSnackBar.danger(context, upl.message);
           }
           if (upl.status == ApiStatus.COMPLETED) {
-            if (upl.data['StatusCode'] == 200) {              
-              Navigator.pop(context);
-              Navigator.of(context).pushNamedAndRemoveUntil(
-              Routes.attendance,
-              ModalRoute.withName(Routes.attendance));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    action: SnackBarAction(label: 'OK',onPressed: () {}),
-                    content:  Text('${upl.data['Message'].toString()}'),
-                    duration: const Duration(milliseconds: 3000),
-                    behavior: SnackBarBehavior.floating
-                  )
-              );
+
+            if (upl.data['StatusCode'] == 200) {
+              // Navigator.pop(context);
+              // Navigator.of(context).pushNamedAndRemoveUntil(
+              // Routes.attendance,
+              // ModalRoute.withName(Routes.attendance));
+
+              if(temporary){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      action: SnackBarAction(label: 'OK',onPressed: () {}),
+                      // content:  Text('${upl.data['Message'].toString()}'),
+                      content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
+                      duration: const Duration(milliseconds: 5000),
+                      behavior: SnackBarBehavior.floating
+                    )
+                );
+              } else {
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      action: SnackBarAction(label: 'OK',onPressed: () {}),
+                      content:  Text('${upl.data['Message'].toString()}'),
+                      // content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
+                      duration: const Duration(milliseconds: 5000),
+                      behavior: SnackBarBehavior.floating
+                    )
+                );
+              }
+              
               // to another tab
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
+              // Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
             }
             if (upl.data['StatusCode'] == 400) {
+              setState(() {
+                _loading = false;
+              });
               AppSnackBar.danger(context, upl.data['Message'].toString());
             }
           }
-        }
-      );
+        }).onError((error, stackTrace) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                action: SnackBarAction(label: 'ERROR',onPressed: () {}),
+                // content:  Text('${upl.data['Message'].toString()}'),
+                content: Text(error.toString()),
+                duration: const Duration(milliseconds: 5000),
+                behavior: SnackBarBehavior.floating
+              )
+          );
+        });
+      }
+    }); 
+
+
+
+    // await _attendanceService.biometriccheckinout(
+    //   JsonEncoder().convert(
+    //     new AttendanceModel(
+    //       typeID: 'biometric',
+    //       activityTypeID: ((type=="IN") ? _activitytypes.firstWhere((e) => e.name=='Checkin') : _activitytypes.firstWhere((e) => e.name=='Checkout')).id,
+    //       entityID: _entities.first['id'],
+    //       locationID: selectedLocation.code,
+    //       latitude: currentLocation.latitude,
+    //       longitude: currentLocation.longitude,
+    //       inOut: type,
+    //       employeeID: globals.appAuth.user!.username.toString(),
+    //       temporary: temporary
+    //     ).toJson())).then((upl) {
+    //       if (upl.status == ApiStatus.ERROR) {
+    //         AppSnackBar.danger(context, upl.message);
+    //       }
+    //       if (upl.status == ApiStatus.COMPLETED) {
+    //         if (upl.data['StatusCode'] == 200) {              
+    //           Navigator.pop(context);
+    //           Navigator.of(context).pushNamedAndRemoveUntil(
+    //           Routes.attendance,
+    //           ModalRoute.withName(Routes.attendance));
+    //           ScaffoldMessenger.of(context).showSnackBar(
+    //             SnackBar(
+    //                 action: SnackBarAction(label: 'OK',onPressed: () {}),
+    //                 content:  Text('${upl.data['Message'].toString()}'),
+    //                 duration: const Duration(milliseconds: 3000),
+    //                 behavior: SnackBarBehavior.floating
+    //               )
+    //           );
+    //           // to another tab
+    //           Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
+    //         }
+    //         if (upl.data['StatusCode'] == 400) {
+    //           AppSnackBar.danger(context, upl.data['Message'].toString());
+    //         }
+    //       }
+    //     }
+    //   );
+
+
       Future.delayed(Duration.zero, () async {
         setState(() {
           _loading = false;
         });
       });
+
   }
 
   void selfiecheckinout(File file, String type,) async{
     setState(() {
       _loading = true;
     });
-    await _attendanceService.selfiecheckinout(file,JsonEncoder().convert(
-      new AttendanceModel(
-        typeID: 'photo',
-        activityTypeID: ((type=="IN") ? _activitytypes.firstWhere((e) => e.name=='Checkin') : _activitytypes.firstWhere((e) => e.name=='Checkout')).id,
-        entityID: _entities.first['id'],
-        locationID: selectedLocation.code,
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-        inOut: type,
-        employeeID: globals.appAuth.user!.username.toString()
-      ).toJson())).then((upl) {
-        if (upl.status == ApiStatus.ERROR) {
-          AppSnackBar.danger(context, upl.message);
+    bool temporary = false;
+    await _surveyService.surveys(globals.getFilterRequest()).then((res) {
+      if (res.status == ApiStatus.COMPLETED){
+        if (res.data.data.length > 0){
+          List<Map<String, dynamic>> entitySurvey = [];
+          res.data.data.forEach((i) {
+            entitySurvey.add(i.toJson());
+          });
+          entitySurvey.forEach((element) {
+            if(element['AlreadyFilled']== false && element['IsRequired']== true){
+              temporary = true;
+            }
+          });
         }
-        if (upl.status == ApiStatus.COMPLETED) {
-          if (upl.data['StatusCode'] == 200) {
-            // AppSnackBar.success(context, upl.data['Message'].toString());
-            Navigator.pop(context);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.attendance,
-            ModalRoute.withName(Routes.attendance));
+
+        _attendanceService.selfiecheckinout(file, JsonEncoder().convert(
+          new AttendanceModel(
+            typeID: 'photo',
+            activityTypeID: ((type=="IN") ? _activitytypes.firstWhere((e) => e.name=='Checkin') : _activitytypes.firstWhere((e) => e.name=='Checkout')).id,
+            entityID: _entities.first['id'],
+            locationID: selectedLocation.code,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            inOut: type,
+            employeeID: globals.appAuth.user!.username.toString(),
+            temporary: temporary
+          ).toJson())).then((upl) {
+            setState(() {
+              _loading = false;
+            });
+            if (upl.status == ApiStatus.ERROR) {
+              AppSnackBar.danger(context, upl.message);
+            }
+            if (upl.status == ApiStatus.COMPLETED){
+              if (upl.data['StatusCode'] == 200){
+                if(temporary){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        action: SnackBarAction(label: 'OK',onPressed: () {}),
+                        // content:  Text('${upl.data['Message'].toString()}'),
+                        content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
+                        duration: const Duration(milliseconds: 5000),
+                        behavior: SnackBarBehavior.floating
+                      )
+                  );
+                } else {
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        action: SnackBarAction(label: 'OK',onPressed: () {}),
+                        content:  Text('${upl.data['Message'].toString()}'),
+                        // content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
+                        duration: const Duration(milliseconds: 5000),
+                        behavior: SnackBarBehavior.floating
+                      )
+                  );
+                }
+              }
+              if (upl.data['StatusCode'] == 400) {
+                AppSnackBar.danger(context, upl.data['Message'].toString());
+              }
+            }
+          }).onError((error, stackTrace) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                  action: SnackBarAction(label: 'OK',onPressed: () {}),
-                  content:  Text('${upl.data['Message'].toString()}'),
-                  duration: const Duration(milliseconds: 3000),
+                  action: SnackBarAction(label: 'ERROR',onPressed: () {}),
+                  // content:  Text('${upl.data['Message'].toString()}'),
+                  content: Text(error.toString()),
+                  duration: const Duration(milliseconds: 5000),
                   behavior: SnackBarBehavior.floating
                 )
             );
-            // to another tab
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
-          }
-          if (upl.data['StatusCode'] == 400) {
-            AppSnackBar.danger(context, upl.data['Message'].toString());
-          }
-        }
+          });
       }
-    );
+    });
+
+    // await _attendanceService.selfiecheckinout(file,JsonEncoder().convert(
+    //   new AttendanceModel(
+    //     typeID: 'photo',
+    //     activityTypeID: ((type=="IN") ? _activitytypes.firstWhere((e) => e.name=='Checkin') : _activitytypes.firstWhere((e) => e.name=='Checkout')).id,
+    //     entityID: _entities.first['id'],
+    //     locationID: selectedLocation.code,
+    //     latitude: currentLocation.latitude,
+    //     longitude: currentLocation.longitude,
+    //     inOut: type,
+    //     employeeID: globals.appAuth.user!.username.toString()
+    //   ).toJson())).then((upl) {
+    //     if (upl.status == ApiStatus.ERROR) {
+    //       AppSnackBar.danger(context, upl.message);
+    //     }
+    //     if (upl.status == ApiStatus.COMPLETED) {
+    //       if (upl.data['StatusCode'] == 200) {
+    //         // AppSnackBar.success(context, upl.data['Message'].toString());
+    //         Navigator.pop(context);
+    //         Navigator.of(context).pushNamedAndRemoveUntil(
+    //         Routes.attendance,
+    //         ModalRoute.withName(Routes.attendance));
+    //         ScaffoldMessenger.of(context).showSnackBar(
+    //           SnackBar(
+    //               action: SnackBarAction(label: 'OK',onPressed: () {}),
+    //               content:  Text('${upl.data['Message'].toString()}'),
+    //               duration: const Duration(milliseconds: 3000),
+    //               behavior: SnackBarBehavior.floating
+    //             )
+    //         );
+    //         // to another tab
+    //           Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
+    //       }
+    //       if (upl.data['StatusCode'] == 400) {
+    //         AppSnackBar.danger(context, upl.data['Message'].toString());
+    //       }
+    //     }
+    //   }
+    // );
+
     Future.delayed(Duration.zero, () async {
       setState(() {
         _loading = false;

@@ -33,6 +33,8 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
     'Finish': DateTime.now().subtract(Duration(days: 1, hours: 7)).toIso8601String(),
   };
 
+  bool _loading = false;
+
   @override
   void initState() {
     super.initState();
@@ -68,99 +70,111 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
   Widget _container(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: FutureBuilder<ApiResponse<dynamic>>(
-        future: _surveys,
-        builder: (context, snapshot) {
-          List<DataRow> _dataRows = <DataRow>[];
+      child: Column(
+        children: [
+          FutureBuilder<ApiResponse<dynamic>>(
+            future: _surveys,
+            builder: (context, snapshot) {
+              List<DataRow> _dataRows = <DataRow>[];
 
-          if (snapshot.hasError) {
-            AppSnackBar.danger(context, snapshot.error.toString());
-          }
+              if (snapshot.hasError) {
+                AppSnackBar.danger(context, snapshot.error.toString());
+              }
 
-          if (snapshot.hasData) {
-            var _response = snapshot.data?.data;
+              if (snapshot.hasData) {
+                var _response = snapshot.data?.data;
 
-            switch (snapshot.data!.status) {
-              case ApiStatus.LOADING:
-                return AppLoading(
-                  loadingMessage: snapshot.data!.message,
-                );
+                switch (snapshot.data!.status) {
+                  case ApiStatus.LOADING:
+                    return AppLoading(
+                      loadingMessage: snapshot.data!.message,
+                    );
 
-              case ApiStatus.COMPLETED:
-                if (_response.data.length > 0) {
+                  case ApiStatus.COMPLETED:
+                    if (_response.data.length > 0) {
 
-                  var indexData = 0;
-                  _response.data.reversed.forEach((v) {
-                    _dataRows.add(DataRow(
-                      cells: _dataCells(v),
-                      color: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        // Even rows will have a grey color.
-                        if (indexData.isEven) {
-                          return Colors.grey.withOpacity(0.3);
-                        }
-                        return Colors.white;
-                        // Use default value for other states and odd rows.
-                      })
-                    ));
-                    indexData++;
-                  });
+                      var indexData = 0;
+                      _response.data.reversed.forEach((v) {
+                        _dataRows.add(DataRow(
+                          cells: _dataCells(v),
+                          color: MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                            // Even rows will have a grey color.
+                            if (indexData.isEven) {
+                              return Colors.grey.withOpacity(0.3);
+                            }
+                            return Colors.white;
+                            // Use default value for other states and odd rows.
+                          })
+                        ));
+                        indexData++;
+                      });
+                    }
+
+                    if (_response.message != null) {
+                      return AppError(
+                        errorMessage: _response.message,
+                        onRetryPressed: () => setState(() {
+                          _surveys = _surveyService
+                              .surveys(globals.getFilterRequest());
+                        }),
+                      );
+                    }
+                    break;
+                  case ApiStatus.ERROR:
+                    return AppError(
+                      errorMessage: snapshot.data!.message,
+                      onRetryPressed: () => setState(() {
+                        _surveys = _surveyService
+                            .surveys(globals.getFilterRequest());
+                      }),
+                    );
                 }
+              }
 
-                if (_response.message != null) {
-                  return AppError(
-                    errorMessage: _response.message,
-                    onRetryPressed: () => setState(() {
-                      _surveys = _surveyService
-                          .surveys(globals.getFilterRequest());
-                    }),
-                  );
-                }
-                break;
-              case ApiStatus.ERROR:
-                return AppError(
-                  errorMessage: snapshot.data!.message,
-                  onRetryPressed: () => setState(() {
-                    _surveys = _surveyService
-                        .surveys(globals.getFilterRequest());
-                  }),
-                );
-            }
-          }
-
-          return (snapshot.connectionState == ConnectionState.done)
-              ? AppDataTable(
-                  columns: <DataColumn>[
-                    DataColumn(
-                      label: Text(''),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        AppLocalizations.of(context).translate('Title'),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        AppLocalizations.of(context).translate('Schedule'),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        AppLocalizations.of(context).translate('Required'),
-                      ),
+              return (snapshot.connectionState == ConnectionState.done)
+                  ? AppDataTable(
+                      columns: <DataColumn>[
+                        DataColumn(
+                          label: Text(''),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            AppLocalizations.of(context).translate('Title'),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            AppLocalizations.of(context).translate('Schedule'),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            AppLocalizations.of(context).translate('Required'),
+                          ),
+                        )
+                      ],
+                      columnWidths: {
+                        0: FixedColumnWidth(55),
+                        1: FlexColumnWidth(),
+                        2: FixedColumnWidth(95),
+                        3: FixedColumnWidth(60)
+                      },
+                      rows: _dataRows,
                     )
-                  ],
-                  columnWidths: {
-                    0: FixedColumnWidth(55),
-                    1: FlexColumnWidth(),
-                    2: FixedColumnWidth(95),
-                    3: FixedColumnWidth(60)
-                  },
-                  rows: _dataRows,
-                )
-              : AppLoading();
-        },
-      ),
+                  : AppLoading();
+            },
+          ),
+          ElevatedButton.icon(
+            onPressed: (){
+              updateMobileAttendance();
+            }, 
+            label: Text('Update Mobile Attendance'),
+            icon: Icon(Icons.update),
+            style: ElevatedButton.styleFrom(primary: Colors.blue)
+          ),
+        ],
+      )
     );
   }
 
@@ -223,5 +237,43 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
         )
       ),
     ];
+  }
+
+  void updateMobileAttendance()async{
+    
+    setState(() {
+      _loading = true;
+    });
+    _surveyService.updateMobileAttendance().then((res) {
+      setState(() {
+        _loading = false;
+      });
+      if (res.status == ApiStatus.ERROR) {
+        AppSnackBar.danger(context, res.message);
+      }
+      if (res.status == ApiStatus.COMPLETED){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              action: SnackBarAction(label: 'OK',onPressed: () {}),
+              // content:  Text('${upl.data['Message'].toString()}'),
+              content: Text('Update successfully!'),
+              duration: const Duration(milliseconds: 5000),
+              behavior: SnackBarBehavior.floating
+            )
+        );
+      }
+    }).onError((error, stackTrace) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              action: SnackBarAction(label: 'Error',onPressed: () {}),
+              // content:  Text('${upl.data['Message'].toString()}'),
+              content: Text(error.toString()),
+              duration: const Duration(milliseconds: 5000),
+              behavior: SnackBarBehavior.floating
+            )
+        );
+    });
+    // _surveyService.complaintSave(fileDoc, data, reason)
+
   }
 }

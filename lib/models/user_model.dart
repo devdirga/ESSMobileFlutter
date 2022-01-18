@@ -260,7 +260,8 @@ class AttendanceModel {
   double? latitude;
   String? inOut;
   String? employeeID;
-  AttendanceModel({this.typeID,this.entityID,this.activityTypeID,this.locationID,this.latitude,this.longitude,this.inOut,this.employeeID});
+  bool? temporary;
+  AttendanceModel({this.typeID,this.entityID,this.activityTypeID,this.locationID,this.latitude,this.longitude,this.inOut,this.employeeID,this.temporary});
   AttendanceModel.fromJson(Map<String, dynamic> json){
     typeID=json['typeID'];
     entityID=json['entityID'];
@@ -269,7 +270,8 @@ class AttendanceModel {
     longitude=json['longitude'];
     latitude=json['latitude'];
     inOut=json['inOut'];
-    employeeID=json['employeeID'];    
+    employeeID=json['employeeID'];
+    temporary=json['temporary'];
   }
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -281,6 +283,7 @@ class AttendanceModel {
     data['longitude']=this.longitude;
     data['inOut']=this.inOut;
     data['employeeID']=this.employeeID;
+    data['temporary']=this.temporary;
     return data;
   }
 }

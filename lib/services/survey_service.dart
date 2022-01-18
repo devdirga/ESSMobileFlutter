@@ -264,4 +264,17 @@ class SurveyService {
 
     return file;
   }
+
+  Future<ApiResponse> updateMobileAttendance() async {
+    try{
+      final req = http.MultipartRequest('GET', Uri.parse('${globals.apiUrl}/api/absence/updatedoinoutdev'));
+      Map<String, String> h = {HttpHeaders.authorizationHeader:'Bearer $_apiToken'};
+      req.headers.addAll(h);      
+      return ApiResponse.completed(json.decode(await (await req.send()).stream.bytesToString()));
+    }catch(e){
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+
 }
