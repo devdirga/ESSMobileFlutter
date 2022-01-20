@@ -105,8 +105,10 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   });
 
                   _response.data.reversed.forEach((v) {
-                    _children.add(_buildExpansionTile(context, v, _expanded));
-                    _expanded = false;
+                    if(v.action != 2){
+                      _children.add(_buildExpansionTile(context, v, _expanded));
+                      _expanded = false;
+                    }
                   });
                 } else {
                   _children.add(

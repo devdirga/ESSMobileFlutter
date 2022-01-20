@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -480,6 +481,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 4));
     _leaveService.leaveInfo(globals.getFilterRequest()).then((v) {
       if (v.status == ApiStatus.COMPLETED) {
         if (v.data.data != null) {
@@ -502,13 +504,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .absenceImported(globals.getFilterRequest())
         .then((v) {
       if (v.status == ApiStatus.COMPLETED) {
-        if (v.data.data.length > 0) {
-          if (this.mounted) {
-            setState(() {
-              _clockIn = '';
-              _clockOut = '';
-            });
-          }
+        String _inTime = '';
+        String _outTime = '';
+        if(v.data.data[0] != null){
+          DateTime _actualIn = DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(v.data.data[0].clock, false)
+            .toLocal();
+          _inTime = DateFormat('HH:mm').format(_actualIn); 
+        }
+        if(v.data.data[1] != null){
+          DateTime _actualOut = DateFormat('yyyy-MM-ddTHH:mm:ss')
+            .parse(v.data.data[1].clock, false)
+            .toLocal();
+          _outTime = DateFormat('HH:mm').format(_actualOut); 
+        }
+        if(this.mounted){
+          setState(() {
+            _clockIn = _inTime;
+            _clockOut = _outTime;
+          });
         }
       }
     });

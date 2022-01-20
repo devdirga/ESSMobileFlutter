@@ -179,40 +179,61 @@ class _SimLoanScreenState extends State<SimLoanScreen> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Simulation ID: '+ items.idSimulation!,
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Simulation ID: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(items.idSimulation!, style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Request Date: ' + DateFormat('dd/MM/yyyy').format(_requestDate),
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Request Date: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(DateFormat('dd/MM/yyyy').format(_requestDate), style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Loan Value: ' + globals.formatCurrency.format(items.loanValue),
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Loan Value: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(globals.formatCurrency.format(items.loanValue), style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Length: ' + items.periodeLength!.toString() + ' months',
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Length: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(items.periodeLength!.toString() + ' months', style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Net Income: ' + globals.formatCurrency.format(items.netIncome),
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Net Income: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(globals.formatCurrency.format(items.netIncome), style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Installment: ' + globals.formatCurrency.format(items.installmentValue),
-                  style: Theme.of(context).primaryTextTheme.bodyText2
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Installment: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(globals.formatCurrency.format(items.installmentValue), style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
                 ),
                 SizedBox(height: 5),
-                Text(
-                  'Income After Installment: ' + globals.formatCurrency.format(items.incomeAfterInstallment),
-                  style: Theme.of(context).primaryTextTheme.bodyText2
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Income After Installment: ', style: Theme.of(context).primaryTextTheme.bodyText2),
+                    Text(globals.formatCurrency.format(items.incomeAfterInstallment), style: Theme.of(context).primaryTextTheme.bodyText2)
+                  ],
+                )
               ],
             )
           )

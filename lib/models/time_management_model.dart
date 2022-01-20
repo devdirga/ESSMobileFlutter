@@ -151,11 +151,39 @@ class TimeAttendanceModel {
 }
 
 class AbsenceImportedModel {
-  AbsenceImportedModel.fromJson(Map<String, dynamic> json);
+  String? clock;
+  String? emplIdField;
+  String? emplNameField;
+  String? inOutField;
+  String? presenceDateField;
+  int? recIdField;
+
+  AbsenceImportedModel({
+    this.clock,
+    this.emplIdField,
+    this.emplNameField,
+    this.inOutField,
+    this.presenceDateField,
+    this.recIdField
+  });
+
+  AbsenceImportedModel.fromJson(Map<String, dynamic> json) {
+    clock = json['Clock'];
+    emplIdField = json['EmplIdField'];
+    emplNameField = json['EmplNameField'];
+    inOutField = json['InOutField'];
+    presenceDateField = json['PresenceDateField'];
+    recIdField = json['RecIdField'];
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-
+    data['Clock'] = this.clock;
+    data['EmplIdField'] = this.emplIdField;
+    data['EmplNameField'] = this.emplNameField;
+    data['InOutField'] = this.inOutField;
+    data['PresenceDateField'] = this.presenceDateField;
+    data['RecIdField'] = this.recIdField;
     return data;
   }
 }
