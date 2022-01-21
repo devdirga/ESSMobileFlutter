@@ -116,6 +116,8 @@ class LocationModel {
   double? longitude;
   double? radius;
   bool? isVirtual;
+  double? distance;
+  bool? isInRadius;
   LocationModel({this.id, this.name, this.code, this.address, this.status, this.isVirtual, this.latitude, this.longitude, this.radius});
   LocationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

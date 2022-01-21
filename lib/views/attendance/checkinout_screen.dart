@@ -20,6 +20,7 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
+import 'package:intl/intl.dart';
 
 class ChechInOutScreen extends StatefulWidget {
   final dynamic filterRequest;
@@ -37,51 +38,20 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
   bool ready  = false, allready = false;
   final SurveyService _surveyService = SurveyService();
   bool _loading = false;
+  bool isInRadius = false;
+  NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
 
   @override
   void initState() {
     super.initState();
-    
-    /* _surveyService.surveys(globals.getFilterRequest()).then((res) {
-      if (res.status == ApiStatus.COMPLETED){
-        if (res.data.data.length > 0){
-          List<Map<String, dynamic>> entitySurvey = [];
-          res.data.data.forEach((i) {
-            entitySurvey.add(i.toJson());
-          });
-          bool isThereUnFilledSurvey = false;
-          entitySurvey.forEach((element) {
-            if(element['AlreadyFilled']== false){
-              isThereUnFilledSurvey = true;
-            }
-          });
-          if(isThereUnFilledSurvey){
-            Navigator.pop(context);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.survey,
-            ModalRoute.withName(Routes.survey));
-          } else {
-            getCurrentLocation();  
-          }
-
-        }else{
-          getCurrentLocation();
-        }
-      }
-    }); */
-
     getCurrentLocation();
-
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status != AppStatus.Authenticated) {
         context.read<AuthProvider>().signOut();
         Navigator.pop(context);
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.login,
-          ModalRoute.withName(Routes.login));
+        Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, ModalRoute.withName(Routes.login));
       }
     });
-
   }
 
   getCurrentLocation() async {
@@ -110,19 +80,21 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
         if (v.status == ApiStatus.COMPLETED){
           if (v.data.data.length > 0){
             v.data.data.forEach((i) {_entities.add(i.toJson());});
-
             _entities.forEach(( element) {
               _activitytypes = element['activityTypes'];
               locationlist = element['locations'];
             });
-
             loc.getLocation().then((d) {
               if(this.mounted){
                 setState(() {
                   currentLocation.latitude = d.latitude!;
                   currentLocation.longitude = d.longitude!;
-                  nearest = getNearestLoc(currentLocation.latitude, currentLocation.longitude, locationlist);
-                  selectedLocation = chooseLocation(nearest);
+
+                  // nearest = getNearestLoc(currentLocation.latitude, currentLocation.longitude, locationlist);
+                  // selectedLocation = chooseLocation(nearest);
+                  nearest = getAssignedLocation(currentLocation.latitude, currentLocation.longitude, locationlist);
+                  selectedLocation = chooseAssignedLocation(nearest);
+
                   allready = true;
                 });
               }    
@@ -161,13 +133,18 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                             items:nearest.map((data) {
                               return DropdownMenuItem(
                                 value: data.code,
-                                child: Text('${data.name!} - Radius ${data.radius} m',style: TextStyle(fontSize: 14,color: Colors.white))
+                                child: Text('${data.name!} - (${myFormat.format(data.distance!.roundToDouble()).replaceAll(",", ".")} m) ${myFormat.format(data.radius!.roundToDouble()).replaceAll(",", ".")} m',style: TextStyle(fontSize: 14,color: Colors.white))
                               );
                             }).toList(),
                             onChanged: (v) {
                               if(this.mounted){
                                 setState(() {
                                   selectedLocation = nearest.singleWhere((e) => e.code == v);
+                                  if(selectedLocation.isInRadius == true){
+                                    isInRadius = true;
+                                  }else{
+                                    isInRadius = false;
+                                  }
                                 });
                               }
                             }
@@ -176,7 +153,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                       )
                     ),
                     Flexible(
-                      flex: 8,
+                      flex: 10,
                       child: (_entities.length > 0) ? 
                         new FlutterMap(
                         options: new MapOptions(center: new latlng.LatLng(currentLocation.latitude!, currentLocation.longitude!)),
@@ -203,7 +180,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                     ),
                     Flexible(
                       flex: 2,
-                      child: (nearest.length > 0) ?
+                      child: (nearest.length > 0 && isInRadius == true) ?
                         Row(
                         children: <Widget>[
                           Expanded(
@@ -252,8 +229,8 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                                   }
                                 },
                                 label: Text('Check in'),
-                                icon: Icon(Icons.map),
-                                style: ElevatedButton.styleFrom(primary: Colors.blue)
+                                icon: Icon(Icons.login_outlined),
+                                style: ElevatedButton.styleFrom(primary: Colors.green)
                               )
                             )
                           ),
@@ -280,7 +257,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                                     }
                                 },
                                 label: Text('Check out'),
-                                icon: Icon(Icons.map),
+                                icon: Icon(Icons.logout_outlined),
                                 style: ElevatedButton.styleFrom(primary: Colors.blue)
                               )
                             )
@@ -294,14 +271,28 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                               width: double.infinity,
                               child: ElevatedButton.icon(
                                 onPressed: (){},
-                                label: Text('No Nearest Location Found'),
+                                label: Text('you are too far from ${selectedLocation.name}'),
                                 icon: Icon(Icons.not_listed_location_outlined),
-                                style: ElevatedButton.styleFrom(primary: Colors.black)
+                                style: ElevatedButton.styleFrom(primary: Colors.red)
                               )
                             )
                           )
                         ]
                       )
+                    ),
+                    Flexible(
+                      // flex: 2,
+                      child: Container(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: (){
+                            getCurrentLocation();
+                          }, 
+                          label: Text('Update my location'),
+                          icon: Icon(Icons.my_location),
+                          style: ElevatedButton.styleFrom(primary: Colors.black)
+                        ),
+                      ),
                     )
                   ]
                 ) : AppLoading()
@@ -365,6 +356,54 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
       return nearest;
     } on Exception catch (_) {
       return nearest;
+    }
+  }
+
+  List<LocationModel> getAssignedLocation(double? lat, double? long, List<LocationModel> locs){
+    List<LocationModel> assigned = [];
+    try{
+      locs.forEach((e) {
+        if(e.isVirtual==true){
+          e.distance = 0;
+          e.isInRadius = true;
+          assigned.add(e);
+        }else{
+          var p = 0.017453292519943295;
+          var c = cos;
+          var a = 0.5 - c((e.latitude! - lat!) * p) / 2 +
+            c(lat * p) * c(e.latitude! * p) *
+            (1 - c((e.longitude! - long!) * p)) / 2;
+          var n = 12742 * asin(sqrt(a)) * 1000;
+          e.distance = n;
+          if(n<=e.radius!){
+            e.isInRadius = true;
+          }else{
+            e.isInRadius = false;
+          }
+          assigned.add(e);
+        }
+      });
+      return assigned;
+    } on Exception catch (_) {
+      return assigned;
+    }
+  }
+
+  LocationModel chooseAssignedLocation(List<LocationModel> locs){
+    try{
+      LocationModel loc = locs.first;
+      bool inRad = false;
+      if(loc.isInRadius==true){
+        inRad = true;
+      }else{
+        inRad = false;
+      }
+      setState(() {
+        isInRadius = inRad;
+      });
+      return loc;
+    } on Exception catch(_){
+      return new LocationModel();
     }
   }
 
