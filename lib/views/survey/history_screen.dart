@@ -55,15 +55,19 @@ class _SurveyHistoryScreenState extends State<SurveyHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
+    return RefreshIndicator(
+      onRefresh: _refreshData,
       child: _container(context),
+      /*child: Padding(
+        padding: EdgeInsets.all(5.0),
+      )*/
     );
   }
 
   Widget _container(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
+      physics: AlwaysScrollableScrollPhysics(),
       child: FutureBuilder<ApiResponse<dynamic>>(
         future: _history,
         builder: (context, snapshot) {
@@ -172,5 +176,13 @@ class _SurveyHistoryScreenState extends State<SurveyHistoryScreen> {
       DataCell(Text(DateFormat('dd/MM/yyyy').format(_surveyDate), style: _textStyle)),
       DataCell(Text(item.quizzScore.toString(), style: _textStyle))
     ];
+  }
+
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 4));
+    setState(() {
+       _history = _surveyService
+            .history(globals.getFilterRequest(params: getValue));
+    });
   }
 }

@@ -137,7 +137,7 @@ class ComplaintService {
 
     try {
       final request = http.MultipartRequest('POST',
-          Uri.parse('${globals.apiUrl}/ess/complaint/MRequest'));
+          Uri.parse('${globals.apiUrl}/ess/complaint/mcomplaint'));
       Map<String, String> headers = {HttpHeaders.authorizationHeader: 'Bearer $_apiToken'};
       
       request.headers.addAll(headers);
@@ -165,7 +165,7 @@ class ComplaintService {
 
     try {
       final request = http.MultipartRequest('POST',
-          Uri.parse('${globals.apiUrl}/ess/complaint/MRequestUpdateStatus'));
+          Uri.parse('${globals.apiUrl}/ess/complaint/mresolution'));
       Map<String, String> headers = {HttpHeaders.authorizationHeader: 'Bearer $_apiToken'};
       
       request.headers.addAll(headers);

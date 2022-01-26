@@ -61,18 +61,21 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
+    return RefreshIndicator(
+      onRefresh: _refreshData,
       child: _container(context),
+      /*child: Padding(
+        padding: EdgeInsets.all(5.0),
+      )*/
     );
   }
 
   Widget _container(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
+      physics: AlwaysScrollableScrollPhysics(),
       child: Column(
         children: [
-          
           FutureBuilder<ApiResponse<dynamic>>(
             future: _surveys,
             builder: (context, snapshot) {
@@ -166,7 +169,6 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                   : AppLoading();
             },
           ),
-          
           ElevatedButton.icon(
             onPressed: (){
               updateMobileAttendance();
@@ -174,8 +176,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
             label: Text('Update Mobile Attendance'),
             icon: Icon(Icons.update),
             style: ElevatedButton.styleFrom(primary: Colors.blue)
-          )
-
+          ),
         ],
       )
     );
@@ -278,5 +279,13 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
     });
     // _surveyService.complaintSave(fileDoc, data, reason)
 
+  }
+
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 4));
+    setState(() {
+      _surveys = _surveyService
+          .surveys(globals.getFilterRequest(params: getValue));
+    });
   }
 }
