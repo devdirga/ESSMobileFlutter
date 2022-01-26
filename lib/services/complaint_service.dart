@@ -132,7 +132,7 @@ class ComplaintService {
     return _apiResponse;
   }
 
-  Future<ApiResponse> complaintSave(PlatformFile fileDoc, String data) async {
+  Future<ApiResponse> complaintSave(PlatformFile? fileDoc, String data) async {
     var _apiResponse = ApiResponse.loading('Saving Data');
 
     try {
@@ -142,12 +142,14 @@ class ComplaintService {
       
       request.headers.addAll(headers);
       request.fields['JsonData'] = data;
-      request.files.add(http.MultipartFile(
-        'FileUpload',
-        fileDoc.readStream!,
-        fileDoc.size,
-        filename: fileDoc.name,
-      ));
+      if(fileDoc != null){
+        request.files.add(http.MultipartFile(
+          'FileUpload',
+          fileDoc.readStream!,
+          fileDoc.size,
+          filename: fileDoc.name,
+        ));
+      }
 
       final response = await request.send();
       String stream = await response.stream.bytesToString();
@@ -160,7 +162,7 @@ class ComplaintService {
     return _apiResponse;
   }
 
-  Future<ApiResponse> updateStatus(String data) async {
+  Future<ApiResponse> updateStatus(PlatformFile? fileDoc, String data) async {
     var _apiResponse = ApiResponse.loading('Saving Data');
 
     try {
@@ -170,6 +172,14 @@ class ComplaintService {
       
       request.headers.addAll(headers);
       request.fields['JsonData'] = data;
+      if(fileDoc != null){
+        request.files.add(http.MultipartFile(
+          'FileUpload',
+          fileDoc.readStream!,
+          fileDoc.size,
+          filename: fileDoc.name,
+        ));
+      }
 
       final response = await request.send();
       String stream = await response.stream.bytesToString();

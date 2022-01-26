@@ -17,6 +17,7 @@ import 'package:ess_mobile/utils/routes.dart';
 import 'package:ess_mobile/models/complaint_model.dart';
 import 'package:ess_mobile/models/ticket_category_model.dart';
 import 'package:ess_mobile/services/complaint_service.dart';
+import 'package:ess_mobile/services/master_service.dart';
 
 class ComplaintDetail extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class ComplaintDetail extends StatefulWidget {
 
 class _ComplaintDetailState extends State<ComplaintDetail> {
   final ComplaintService _complaintService = ComplaintService();
+  final MasterService _masterService = MasterService();
   final _formKey = GlobalKey<FormBuilderState>();
 
   Future<ComplaintModel?>? _formValue;
@@ -33,12 +35,7 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
   bool _disabled = true;
   bool _readonly = true;
   
-  List<Map<String, dynamic>> _listType = [
-    { 'ID': 0, 'Name': 'Complaint' },
-	  { 'ID': 1, 'Name': 'Question' },
-	  { 'ID': 2, 'Name': 'Incident' },
-	  { 'ID': 3, 'Name': 'FutureRequest' }
-  ];
+  List<Map<String, dynamic>> _listType = [];
 
   List<Map<String, dynamic>> _listMedia = [
     { 'ID': 0, 'Name': 'Email' },
@@ -62,6 +59,18 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
           Routes.login,
           ModalRoute.withName(Routes.login),
         );
+      }
+    });
+
+    _masterService.ticketType().then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          _listType = [];
+
+          v.data.data.forEach((i) {
+            _listType.add(i);
+          });
+        }
       }
     });
 
@@ -249,7 +258,7 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
                           ]),
                           items: _listType
                               .map((item) => DropdownMenuItem(
-                                    value: item['ID'].toString(),
+                                    value: item['Value'].toString(),
                                     child: Text(item['Name'].toString()),
                                   ))
                               .toList(),
@@ -335,10 +344,10 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
                         true,
                         FormBuilderTextField(
                           name: 'EmailCC',
+                          onChanged: (val) {},
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
-                          onChanged: (val) {},
                         ),
                       ),
                       SizedBox(height: 10),

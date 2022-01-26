@@ -251,7 +251,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                       (_readonly)
                         ? _formInputGroup(
                             AppLocalizations.of(context).translate('ClosedTicketDate'),
-                            true,
+                            false,
                             FormBuilderDateTimePicker(
                               name: 'ClosedDate',
                               enabled: !_readonly,
@@ -291,7 +291,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                           valueTransformer: (String? val) => val.toString(),
                         ),
                       ),
-                      (_readonly) ? SizedBox(height: 10) : Container(),
+                      /*(_readonly) ? SizedBox(height: 10) : Container(),
                       (_readonly) ?
                       _formInputGroup(
                         AppLocalizations.of(context).translate('Media'),
@@ -316,7 +316,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                           valueTransformer: (String? val) => val.toString(),
                         ),
                       )
-                      : Container(),
+                      : Container(),*/
                       SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('Category'),
@@ -377,6 +377,9 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                           name: 'EmailCC',
                           enabled: !_readonly,
                           onChanged: (val) {},
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -393,6 +396,99 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                           maxLines: 3,
                         ),
                       ),
+                      SizedBox(height: 10),
+                      (_readonly)
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                            child: InkWell(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.file_download,
+                                    color: (_init['Accessible'])
+                                        ? null
+                                        : Theme.of(context).disabledColor,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context).translate(
+                                        'DownloadTicket'),
+                                    style: (_init['Accessible'])
+                                        ? null
+                                        : TextStyle(
+                                            color: Theme.of(context)
+                                                .disabledColor),
+                                  ),
+                                ],
+                              ),
+                              onTap: () async {
+                                if (_init['Accessible']) {
+                                  // globals.launchInBrowser(
+                                  //   '${globals.apiUrl}/employee/family/document/download/${_init['employeeID']}/${_init['axid']}',
+                                  // );
+
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.downloader,
+                                    arguments: {
+                                      'name':
+                                          '(${_init['TicketNumber']}) File',
+                                      'link':
+                                          '${globals.apiUrl}/ess/complaint/MDownload/${_init['Id']}/${_init['Filename']}',
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          )
+                        : _formInputGroup(
+                            AppLocalizations.of(context)
+                                .translate('Attachment'),
+                            true,
+                            FormBuilderTextField(
+                              name: 'FilePicker',
+                              decoration: InputDecoration(
+                                // labelText: AppLocalizations.of(context)
+                                //     .translate('DocumentVerification'),
+                                suffixIcon: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    InkWell(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Icon(Icons.file_upload),
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .translate('Upload'),
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        FilePickerResult? result =
+                                            await FilePicker.platform
+                                                .pickFiles(
+                                          withReadStream: true,
+                                        );
+
+                                        if (result != null) {
+                                          _filePicker = result.files.single;
+                                          _formKey.currentState!
+                                              .fields['FilePicker']!
+                                              .didChange(_filePicker!.name);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                              ]),
+                              onChanged: (val) {},
+                              readOnly: true,
+                            ),
+                          ),
                       (_readonly) ? SizedBox(height: 10) : Container(),
                       (_readonly)
                         ? _formInputGroup(
@@ -435,102 +531,85 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                       )
                       : Container(),
                       SizedBox(height: 10),
-                      (!_readonly)
-                          ? _formInputGroup(
-                              AppLocalizations.of(context)
-                                  .translate('Attachment'),
-                              true,
-                              FormBuilderTextField(
-                                name: 'FilePicker',
-                                decoration: InputDecoration(
-                                  // labelText: AppLocalizations.of(context)
-                                  //     .translate('DocumentVerification'),
-                                  suffixIcon: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      InkWell(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(Icons.file_upload),
-                                            Text(
-                                              AppLocalizations.of(context)
-                                                  .translate('Upload'),
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () async {
-                                          FilePickerResult? result =
-                                              await FilePicker.platform
-                                                  .pickFiles(
-                                            withReadStream: true,
-                                          );
-
-                                          if (result != null) {
-                                            _filePicker = result.files.single;
-                                            _formKey.currentState!
-                                                .fields['FilePicker']!
-                                                .didChange(_filePicker!.name);
-                                          }
-                                        },
-                                      ),
-                                    ],
+                      (_readonly && _init['Attachments']['Accessible'])
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                            child: InkWell(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.file_download,
                                   ),
-                                ),
-                                validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(context),
-                                ]),
-                                onChanged: (val) {},
-                                readOnly: true,
+                                  Text(
+                                    AppLocalizations.of(context).translate(
+                                        'ResolutionFile')
+                                  ),
+                                ],
                               ),
-                            )
-                          : Container(),
-                      (!_readonly) ? SizedBox(height: 10) : Container(),
-                      (_readonly)
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: InkWell(
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.file_download,
-                                      color: (_init['Accessible'])
-                                          ? null
-                                          : Theme.of(context).disabledColor,
+                              onTap: () async {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.downloader,
+                                  arguments: {
+                                    'name':
+                                        '(${_init['TicketNumber']}) Resolution',
+                                    'link':
+                                        '${globals.apiUrl}/ess/complaint/MRDownload/${_init['Id']}/${_init['Attachments']['Filename']}',
+                                  },
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
+                        (_readonly && _init['Attachments']['Accessible'] == false)
+                        ? _formInputGroup(
+                          AppLocalizations.of(context)
+                              .translate('ResolutionFile'),
+                          false,
+                          FormBuilderTextField(
+                            name: 'FilePicker',
+                            decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('DocumentVerification'),
+                              suffixIcon: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  InkWell(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.file_upload),
+                                        Text(
+                                          AppLocalizations.of(context)
+                                              .translate('Upload'),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      AppLocalizations.of(context).translate(
-                                          'DownloadFile'),
-                                      style: (_init['Accessible'])
-                                          ? null
-                                          : TextStyle(
-                                              color: Theme.of(context)
-                                                  .disabledColor),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () async {
-                                  if (_init['Accessible']) {
-                                    // globals.launchInBrowser(
-                                    //   '${globals.apiUrl}/employee/family/document/download/${_init['employeeID']}/${_init['axid']}',
-                                    // );
+                                    onTap: () async {
+                                      FilePickerResult? result =
+                                          await FilePicker.platform
+                                              .pickFiles(
+                                        withReadStream: true,
+                                      );
 
-                                    Navigator.pushNamed(
-                                      context,
-                                      Routes.downloader,
-                                      arguments: {
-                                        'name':
-                                            '(${_init['TicketNumber']}) File',
-                                        'link':
-                                            '${globals.apiUrl}/ess/complaint/MDownload/${_init['Id']}/${_init['Filename']}',
-                                      },
-                                    );
-                                  }
-                                },
+                                      if (result != null) {
+                                        _filePicker = result.files.single;
+                                        _formKey.currentState!
+                                            .fields['FilePicker']!
+                                            .didChange(_filePicker!.name);
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
-                            )
-                          : Container(),
+                            ),
+                            onChanged: (val) {},
+                            readOnly: true,
+                          ),
+                        )
+                        : Container()
+                          
                     ],
                   ),
                 )
@@ -643,7 +722,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
         }
       });
      
-      if (_filePicker != null) {
+      if (_filePicker != null && !_readonly) {
         AppAlert(context).save(
           title: AppLocalizations.of(context).translate('TicketRequest'),
           yes: (String? val) async {
@@ -656,7 +735,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
 
             ApiResponse<dynamic> upload =
                 await _complaintService.complaintSave(
-              _filePicker!,
+              _filePicker,
               JsonEncoder().convert(_data.toJson())
             );
 
@@ -688,7 +767,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
       } else {
         if(_readonly){
           AppAlert(context).save(
-            title: AppLocalizations.of(context).translate('TicketRequest'),
+            title: AppLocalizations.of(context).translate('TicketResolution'),
             yes: (String? val) async {
               _data.reason = val.toString().trim();
 
@@ -699,6 +778,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
 
               ApiResponse<dynamic> upload =
                   await _complaintService.updateStatus(
+                _filePicker,
                 JsonEncoder().convert(_data.toJson())
               );
 

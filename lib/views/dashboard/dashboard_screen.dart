@@ -506,13 +506,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (v.status == ApiStatus.COMPLETED) {
         String _inTime = '';
         String _outTime = '';
-        if(v.data.data[0] != null){
+        if(v.data.data.length == 1){
           DateTime _actualIn = DateFormat('yyyy-MM-ddTHH:mm:ss')
             .parse(v.data.data[0].clock, false)
             .toLocal();
           _inTime = DateFormat('HH:mm').format(_actualIn); 
         }
-        if(v.data.data[1] != null){
+        if(v.data.data.length == 2){
           DateTime _actualOut = DateFormat('yyyy-MM-ddTHH:mm:ss')
             .parse(v.data.data[1].clock, false)
             .toLocal();

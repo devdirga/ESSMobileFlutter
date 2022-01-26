@@ -20,6 +20,7 @@ import 'package:ess_mobile/utils/routes.dart';
 import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/services/complaint_service.dart';
 import 'package:ess_mobile/models/complaint_model.dart';
+import 'package:ess_mobile/services/master_service.dart';
 
 class ComplaintScreen extends StatefulWidget {
   @override
@@ -28,6 +29,7 @@ class ComplaintScreen extends StatefulWidget {
 
 class _ComplaintScreenState extends State<ComplaintScreen> {
   final ComplaintService _complaintService = ComplaintService();
+  final MasterService _masterService = MasterService();
   TextEditingController _filterDateStart = TextEditingController();
   TextEditingController _filterDateEnd = TextEditingController();
   TextEditingController _filterSubject = TextEditingController();
@@ -37,24 +39,11 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   
   Future<ApiResponse<dynamic>>? _complaints;
   List<ComplaintModel> _listComplaint = <ComplaintModel>[];
-  List<String> _listType = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
-  List<String> _listStatus = ['Open', 'Progress', 'Closed', 'Reopen'];
+  List<Map<String, dynamic>> _listType = [];
+  List<Map<String, dynamic>> _listStatus = [];
 
   int? _sortColumnIndex;
   bool _isAscending = false;
-
-  List<Map<String, dynamic>> _listObjType = [
-    { 'ID': 0, 'Name': 'Complaint' },
-	  { 'ID': 1, 'Name': 'Question' },
-	  { 'ID': 2, 'Name': 'Incident' },
-	  { 'ID': 3, 'Name': 'FutureRequest' }
-  ];
-
-  List<Map<String, dynamic>> _listUpdateStatus = [
-    { 'ID': 0, 'Name': 'Open' },
-	  { 'ID': 1, 'Name': 'Progress' },
-	  { 'ID': 2, 'Name': 'Closed' }
-  ];
   
   Map<String, dynamic> getValue = {
     'Start':
@@ -75,6 +64,30 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
           Routes.login,
           ModalRoute.withName(Routes.login),
         );
+      }
+    });
+
+    _masterService.ticketType().then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          _listType = [];
+
+          v.data.data.forEach((i) {
+            _listType.add(i);
+          });
+        }
+      }
+    });
+
+    _masterService.ticketStatus().then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          _listStatus = [];
+
+          v.data.data.forEach((i) {
+            _listStatus.add(i);
+          });
+        }
       }
     });
 
@@ -327,9 +340,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         decorationStyle: TextDecorationStyle.solid,
                       ),
                     ),
-                    items: _listObjType
+                    items: _listType
                         .map((item) => DropdownMenuItem(
-                        value: item['ID'].toString(),
+                        value: item['Value'].toString(),
                         child: Text(item['Name'].toString()),
                       ))
                     .toList(),
@@ -348,9 +361,9 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                       ),
                     ),
                     //value: _value,
-                    items: _listUpdateStatus
+                    items: _listStatus
                         .map((item) => DropdownMenuItem(
-                        value: item['ID'].toString(),
+                        value: item['Value'].toString(),
                         child: Text(item['Name'].toString()),
                       ))
                     .toList(),
@@ -503,14 +516,12 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
   void _downloadExcel() async {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1']; 
-    List _status = ['Open', 'Progress', 'Closed'];
-    List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
 
     sheetObject.appendRow(['Ticket Number', 'Subject', 'Type', 'Status', 'Open Ticket Date', 'Close Ticket Date']);
     
     _listComplaint.forEach((comp) {
       DateTime _open = DateFormat('yyyy-MM-ddTHH:mm:ss')
-        .parse(comp.createdDate!, false)
+        .parse(comp.createdDate!, true)
         .toLocal();
      
       String _openDate = DateFormat('dd-MM-yyyy HH:mm').format(_open);
@@ -518,13 +529,14 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
       String _closeDate = '-';
       if(comp.closedDate != '0001-01-01T00:00:00Z'){
         DateTime _close = DateFormat('yyyy-MM-ddTHH:mm:ss')
-          .parse(comp.closedDate!, false)
+          .parse(comp.closedDate!, true)
           .toLocal();
         _closeDate = DateFormat('dd-MM-yyyy HH:mm').format(_close);
       }
       
-      sheetObject.appendRow([comp.ticketNumber, comp.subject, 
-        _type[comp.ticketType!], _status[comp.ticketStatus!],
+      sheetObject.appendRow([comp.ticketNumber, comp.subject,
+        _listType.firstWhere((e) => e['Value'] == comp.ticketType!)['Name'],
+        _listStatus.firstWhere((e) => e['Value'] == comp.ticketStatus!)['Name'],
         _openDate, _closeDate ]);
     });
 
@@ -581,7 +593,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     ];
 
     DateTime _createdDate = DateFormat('yyyy-MM-ddTHH:mm:ss')
-        .parse(item.createdDate!, false)
+        .parse(item.createdDate!, true)
         .toLocal();
     
     TextStyle? _textStyle = TextStyle(
@@ -594,7 +606,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
         ? Text(item.ticketNumber.toString()+'\n'+item.subject.toString().substring(0,12)+'..', style: _textStyle)
         : Text(item.ticketNumber.toString()+'\n'+item.subject.toString(), style: _textStyle)
       ),
-      DataCell(Text(_listType[item.ticketType!], style: _textStyle)),
+      DataCell(Text(_listType.firstWhere((e) => e['Value'] == item.ticketType!)['Name'], style: _textStyle)),
       //DataCell(Text(_listStatus[item.ticketStatus!], style: _textStyle)),
       /*DataCell(Tooltip(
         message: _type[item.ticketType!],

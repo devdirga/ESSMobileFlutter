@@ -77,8 +77,6 @@ class DocumentService {
 
   Future<ApiResponse> saveDocumentRequest(PlatformFile fileDoc, String data) async {
     var _apiResponse = ApiResponse.loading('Saving Data');
-    print(data);
-    print(fileDoc.name);
     try {
       final request = http.MultipartRequest(
           'POST', Uri.parse('${globals.apiUrl}/ess/employee/MSaveDocumentRequest'));

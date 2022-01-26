@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
@@ -34,6 +35,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
   List<Map<String, dynamic>> _listType = [];
   List<Map<String, dynamic>> _listMedia = [];
   List<Map<String, dynamic>> _listUpdateStatus = [];
+  PlatformFile? _filePicker;
   bool _disabled = true;
   bool _readonly = true;
   bool _loading = false;
@@ -248,7 +250,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                       SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('ClosedTicketDate'),
-                        true,
+                        false,
                         FormBuilderDateTimePicker(
                           name: 'ClosedDate',
                           enabled: false,
@@ -281,7 +283,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                           valueTransformer: (String? val) => val.toString(),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      /*SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('Media'),
                         true,
@@ -304,11 +306,11 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                           onChanged: (val) {},
                           valueTransformer: (String? val) => val.toString(),
                         ),
-                      ),
+                      ),*/
                       SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('Category'),
-                        true,
+                        false,
                         FormBuilderDropdown<String>(
                           name: 'Category_id',
                           enabled: false,
@@ -363,6 +365,9 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                           name: 'EmailCC',
                           enabled: false,
                           onChanged: (val) {},
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
                         ),
                       ),
                       SizedBox(height: 10),
@@ -377,42 +382,6 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                           ]),
                           onChanged: (val) {},
                           maxLines: 3,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      _formInputGroup(
-                        AppLocalizations.of(context).translate('Status'),
-                        true,
-                        FormBuilderDropdown<String>(
-                          name: 'TicketStatus',
-                          enabled: !_readonly,
-                          decoration: InputDecoration(
-                              // labelText: AppLocalizations.of(context)
-                              //     .translate('Relationship'),
-                              ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                          ]),
-                          items: _listUpdateStatus
-                              .map((item) => DropdownMenuItem(
-                                    value: item['Value'].toString(),
-                                    child: Text(item['Name'].toString()),
-                                  ))
-                              .toList(),
-                          onChanged: (val) {},
-                          valueTransformer: (String? val) => val.toString(),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      _formInputGroup(
-                        AppLocalizations.of(context).translate('TicketResolution'),
-                        true,
-                        FormBuilderTextField(
-                          name: 'TicketResolution',
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                          ]),
-                          onChanged: (val) {},
                         ),
                       ),
                       SizedBox(height: 10),
@@ -456,6 +425,129 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                               );
                             }
                           },
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                        true,
+                        FormBuilderDropdown<String>(
+                          name: 'TicketStatus',
+                          enabled: !_readonly,
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Relationship'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          items: _listUpdateStatus
+                              .map((item) => DropdownMenuItem(
+                                    value: item['Value'].toString(),
+                                    child: Text(item['Name'].toString()),
+                                  ))
+                              .toList(),
+                          onChanged: (val) {},
+                          valueTransformer: (String? val) => val.toString(),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('TicketResolution'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'TicketResolution',
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      _init['Attachments']['Accessible']
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: InkWell(
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.file_download,
+                                  color: (_init['Accessible'])
+                                      ? null
+                                      : Theme.of(context).disabledColor,
+                                ),
+                                Text(
+                                  AppLocalizations.of(context).translate(
+                                      'DownloadFile'),
+                                  style: (_init['Accessible'])
+                                      ? null
+                                      : TextStyle(
+                                          color: Theme.of(context)
+                                              .disabledColor),
+                                ),
+                              ],
+                            ),
+                            onTap: () async {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.downloader,
+                                arguments: {
+                                  'name':
+                                      '(${_init['TicketNumber']}) Resolution',
+                                  'link':
+                                      '${globals.apiUrl}/ess/complaint/MRDownload/${_init['Id']}/${_init['Attachments']['Filename']}',
+                                },
+                              );
+                            },
+                          ),
+                        )
+                      : _formInputGroup(
+                        AppLocalizations.of(context)
+                            .translate('Attachment'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'FilePicker',
+                          decoration: InputDecoration(
+                            // labelText: AppLocalizations.of(context)
+                            //     .translate('DocumentVerification'),
+                            suffixIcon: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                InkWell(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.file_upload),
+                                      Text(
+                                        AppLocalizations.of(context)
+                                            .translate('Upload'),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    FilePickerResult? result =
+                                        await FilePicker.platform
+                                            .pickFiles(
+                                      withReadStream: true,
+                                    );
+
+                                    if (result != null) {
+                                      _filePicker = result.files.single;
+                                      _formKey.currentState!
+                                          .fields['FilePicker']!
+                                          .didChange(_filePicker!.name);
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          readOnly: true,
                         ),
                       )
                     ],
@@ -565,8 +657,8 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
             _disabled = true;
           });
 
-          ApiResponse<dynamic> upload =
-              await _complaintService.updateStatus(
+          ApiResponse<dynamic> upload = await _complaintService.updateStatus(
+            _filePicker,  
             JsonEncoder().convert(_data.toJson())
           );
 
