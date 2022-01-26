@@ -72,6 +72,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
       scrollDirection: Axis.vertical,
       child: Column(
         children: [
+          
           FutureBuilder<ApiResponse<dynamic>>(
             future: _surveys,
             builder: (context, snapshot) {
@@ -165,6 +166,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                   : AppLoading();
             },
           ),
+          
           ElevatedButton.icon(
             onPressed: (){
               updateMobileAttendance();
@@ -172,7 +174,8 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
             label: Text('Update Mobile Attendance'),
             icon: Icon(Icons.update),
             style: ElevatedButton.styleFrom(primary: Colors.blue)
-          ),
+          )
+
         ],
       )
     );
