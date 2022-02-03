@@ -37,7 +37,7 @@ class AttendanceService {
     try {
       ResponseModel r = ResponseModel.fromJson(
         await rest.get(
-          '${globals.apiUrl}/api/entity/list?skip=0&limit=2&search=',
+          '${globals.apiUrl}/api/entity/mlist?skip=0&limit=2&search=',
           headers: {ctype: appjson, HttpHeaders.authorizationHeader: 'Bearer $token'}
       ));
       r.data = [];

@@ -162,7 +162,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                             urlTemplate: _entities.first['mapboxTemplate'],
                             additionalOptions: {'accessToken':_entities.first['mapboxToken'],'id': _entities.first['mapboxId']}),
                           new MarkerLayerOptions(markers: [
-                            Marker(point: latlng.LatLng(currentLocation.latitude!, currentLocation.longitude!),builder: (ctx) => Icon(Icons.pin_drop,color: Colors.red, size: 20,))
+                            Marker(point: latlng.LatLng(currentLocation.latitude!, currentLocation.longitude!),builder: (ctx) => Icon(Icons.pin_drop,color: Colors.red, size: 25,))
                           ])
                         ]
                       ) :  AppLoadingText(loadingMessage: 'Rendering map ...')
