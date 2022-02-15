@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:ess_mobile/widgets/scaffold.dart';
 import 'package:ess_mobile/widgets/error.dart';
 import 'package:ess_mobile/widgets/loading.dart';
@@ -25,6 +26,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
   final FamilyService _familyService = FamilyService();
 
   Future<ApiResponse<dynamic>>? _families;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -51,9 +53,15 @@ class _FamilyScreenState extends State<FamilyScreen> {
       navBar: NavBar(
         title: Text(AppLocalizations.of(context).translate('Family')),
       ),
-      main: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: _container(context),
+      main: LoadingOverlay(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: _container(context),
+        ),
+        isLoading: _loading,
+        // demo of some additional parameters
+        opacity: 0.5,
+        progressIndicator: CircularProgressIndicator(),
       ),
       actionButton: AppActionButton(
         create: () {
@@ -262,6 +270,18 @@ class _FamilyScreenState extends State<FamilyScreen> {
               PopupMenuItem(
                 child: Row(
                   children: space(10.0, <Widget>[
+                    Icon(Icons.delete_sharp),
+                    Text(
+                      AppLocalizations.of(context)
+                          .translate('DeleteData'),
+                    ),
+                  ]),
+                ),
+                value: 3,
+              ),
+              PopupMenuItem(
+                child: Row(
+                  children: space(10.0, <Widget>[
                     Icon(Icons.hourglass_bottom),
                     Text(
                       AppLocalizations.of(context).translate('WaitingApproval'),
@@ -269,7 +289,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   ]),
                 ),
                 value: -1,
-              ),
+              )
             ]
           : [
               (item.action == 0 || item.action == 2)
@@ -310,7 +330,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                       ),
                       value: 2,
                     ),
-              (item.action == 2)
+              /*(item.action == 2 && item.updateRequest != 1)
                   ? PopupMenuItem(height: 0.0, child: SizedBox.shrink())
                   : PopupMenuItem(
                       child: Row(
@@ -323,33 +343,33 @@ class _FamilyScreenState extends State<FamilyScreen> {
                         ]),
                       ),
                       value: 3,
-                    ),
-              PopupMenuItem(
-                child: Row(
-                  children: space(10.0, <Widget>[
-                    Icon(
-                      Icons.file_download,
-                      color: (item.accessible!)
-                          ? null
-                          : Theme.of(context).disabledColor,
-                    ),
-                    Text(
-                      AppLocalizations.of(context)
-                          .translate('DownloadDocument'),
-                      style: (item.accessible!)
-                          ? null
-                          : TextStyle(color: Theme.of(context).disabledColor),
-                    ),
-                  ]),
-                ),
-                value: 4,
-              ),
+                    ), */
+              (item.accessible == true)
+                ? PopupMenuItem(
+                  child: Row(
+                    children: space(10.0, <Widget>[
+                      Icon(
+                        Icons.file_download
+                      ),
+                      Text(
+                        AppLocalizations.of(context)
+                            .translate('DownloadDocument')
+                      ),
+                    ]),
+                  ),
+                  value: 4,
+                )
+                : PopupMenuItem(height: 0.0, child: SizedBox.shrink()),
             ],
       onSelected: (value) async {
         if (value == 0) {
           AppAlert(context).discard(
             title: AppLocalizations.of(context).translate('Family'),
             yes: () async {
+              setState(() {
+                _loading = true;
+              });
+
               ApiResponse<dynamic> result =
                   await _familyService.familyDiscard(item.id.toString());
 
@@ -371,6 +391,12 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   AppSnackBar.danger(context, result.data.message.toString());
                 }
               }
+
+              Future.delayed(Duration(seconds: 3), () async {
+                setState(() {
+                  _loading = false;
+                });
+              });
             },
           );
         }
@@ -406,6 +432,10 @@ class _FamilyScreenState extends State<FamilyScreen> {
           AppAlert(context).delete(
             title: AppLocalizations.of(context).translate('Family'),
             yes: (reason) async {
+              setState(() {
+                _loading = true;
+              });
+
               Map<String, dynamic> body = {
                 'Id': item.axid,
                 'EmployeeID': item.employeeID,
@@ -433,6 +463,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   AppSnackBar.danger(context, result.data.message.toString());
                 }
               }
+
+              
             },
           );
         }

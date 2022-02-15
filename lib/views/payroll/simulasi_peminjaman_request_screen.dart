@@ -347,7 +347,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   ),
                   SizedBox(height: 10),
                   _formInputGroup(
-                    AppLocalizations.of(context).translate('LoanLength'),
+                    AppLocalizations.of(context).translate('LoanMonths'),
                     true,
                     FormBuilderTextField(
                       name: 'LoanLength',

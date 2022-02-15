@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "994486369445",
-    "project_id": "ess-tps-mobile",
-    "storage_bucket": "ess-tps-mobile.appspot.com"
+    "project_number": "206285146576",
+    "project_id": "ess-tps-mobile-163d0",
+    "storage_bucket": "ess-tps-mobile-163d0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:994486369445:android:d045916139022dfe2de14c",
+        "mobilesdk_app_id": "1:206285146576:android:a2ee36ab56f3490db791d5",
         "android_client_info": {
           "package_name": "com.tps.essmobileapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "994486369445-9uosjtc44al2qadr44d60n5g30dmjqgo.apps.googleusercontent.com",
+          "client_id": "206285146576-la6fgtfhq801e70j3cinodlq63icvtff.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAIiEkPwOyeZ4GXZ_afpBTg8uiU6gDf6sI"
+          "current_key": "AIzaSyAmd4uS4vzeWFj_ZcP8fmZaB6iCJmJMrIc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "994486369445-9uosjtc44al2qadr44d60n5g30dmjqgo.apps.googleusercontent.com",
+              "client_id": "206285146576-la6fgtfhq801e70j3cinodlq63icvtff.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "994486369445-romkgs1q9sqi4m8iteqqrsivqtea7sta.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.tps.essmobileapp"
-              }
             }
           ]
         }

@@ -15,7 +15,6 @@ final ThemeData lightTheme = ThemeData(
   }),
   brightness: Brightness.light,
   primaryColor: Color(0xff2f6de0),
-  primaryColorBrightness: Brightness.dark,
   primaryColorLight: Color(0xffd3e0f8),
   primaryColorDark: Color(0xff143c85),
   canvasColor: Color(0xfffafafa),
@@ -62,9 +61,7 @@ final ThemeData lightTheme = ThemeData(
     hoverColor: Color(0x0a000000),
     colorScheme: ColorScheme(
       primary: Color(0xff1a4fb2),
-      primaryVariant: Color(0xff143c85),
       secondary: Color(0xff2163de),
-      secondaryVariant: Color(0xff143c85),
       surface: Color(0xffffffff),
       background: Color(0xffa6c1f2),
       error: Color(0xffd32f2f),

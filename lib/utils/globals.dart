@@ -36,7 +36,7 @@ final DateTime initDateTime = today;
 final DateTime firstDateTime = DateTime(1950);
 final DateTime lastDateTime = DateTime(today.year + 10);
 
-final formatCurrency = NumberFormat.simpleCurrency(locale: 'id_ID');
+final formatCurrency = NumberFormat.currency(locale: 'id_ID', name: 'Rp ');
 
 PackageInfo packageInfo = PackageInfo(
   appName: 'Unknown',
