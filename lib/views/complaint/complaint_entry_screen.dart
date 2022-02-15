@@ -442,7 +442,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                           )
                         : _formInputGroup(
                             AppLocalizations.of(context)
-                                .translate('Attachment'),
+                                .translate('TicketFile'),
                             true,
                             FormBuilderTextField(
                               name: 'FilePicker',
@@ -542,7 +542,7 @@ class _ComplaintEntryScreenState extends State<ComplaintEntryScreen> {
                                   ),
                                   Text(
                                     AppLocalizations.of(context).translate(
-                                        'ResolutionFile')
+                                        'DownloadResolution')
                                   ),
                                 ],
                               ),

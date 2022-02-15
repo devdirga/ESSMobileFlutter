@@ -1,3 +1,4 @@
+import 'package:ess_mobile/widgets/space.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -157,8 +158,11 @@ class _DocumentRequestScreenState extends State<DocumentRequestScreen> {
                     ),
                     DataColumn(
                       label: Text(
-                        AppLocalizations.of(context).translate('CreatedDate'),
+                        AppLocalizations.of(context).translate('Date'),
                       ),
+                    ),
+                    DataColumn(
+                      label: Text('Stat'),
                     ),
                     DataColumn(
                       label: Text(''),
@@ -179,8 +183,9 @@ class _DocumentRequestScreenState extends State<DocumentRequestScreen> {
                   columnWidths: {
                     0: FixedColumnWidth(140),
                     1: FlexColumnWidth(),
-                    2: FixedColumnWidth(90),
+                    2: FixedColumnWidth(50),
                     3: FixedColumnWidth(40),
+                    4: FixedColumnWidth(60),
                   },
                 )
               : AppLoading();
@@ -223,15 +228,49 @@ class _DocumentRequestScreenState extends State<DocumentRequestScreen> {
       DataCell(Text(item.description.toString())),
       DataCell(Text(DateFormat('dd/MM/yyyy').format(_createdDate))),
       DataCell(Tooltip(
-        message: _status[item.status!],
+        message: item.attachment!.filename == null ? _status[0] : _status[1],
         preferBelow: false,
         child: CircleAvatar(
           radius: 14,
           backgroundColor:
               Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: Icon(_icons[item.status!], color: _colors[item.status!]),
+          child: Icon(
+            item.attachment!.filename == null ? _icons[0] : _icons[1], 
+            color: item.attachment!.filename == null ? _colors[0] : _colors[1]
+          ),
         ),
       )),
+      DataCell(PopupMenuButton(
+        icon: Icon(
+          Icons.more_vert,
+          color: Theme.of(context).hintColor,
+        ),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            child: Row(
+              children: space(10.0, <Widget>[
+                Icon(Icons.remove_red_eye),
+                Text(
+                  AppLocalizations.of(context).translate('ShowDetail'),
+                ),
+              ]),
+            ),
+            value: 0,
+          ),
+        ],
+        onSelected: (value) {
+          if (value == 0) {
+            Map<String, dynamic> _item = item.toJson();
+            _item['Readonly'] = true;
+
+            Navigator.pushNamed(
+              context,
+              Routes.documentRequestEntry,
+              arguments: _item,
+            );
+          }
+        },
+      ))
       //DataCell(Text(DateFormat('dd MMM yyyy').format(_validDate))),
       /*DataCell(Container(
         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),

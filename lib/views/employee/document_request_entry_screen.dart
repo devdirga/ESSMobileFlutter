@@ -230,7 +230,96 @@ class _DocumentRequestEntryScreenState extends State<DocumentRequestEntryScreen>
                     onChanged: (val) {},
                     readOnly: true,
                   ),
-                ) : Container(),
+                ) 
+                : Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
+                    child: InkWell(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.file_download,
+                            color: (_init['Accessible'])
+                                ? null
+                                : Theme.of(context).disabledColor,
+                          ),
+                          Text(
+                            AppLocalizations.of(context).translate(
+                                'DownloadFile'),
+                            style: (_init['Accessible'])
+                                ? null
+                                : TextStyle(
+                                    color: Theme.of(context)
+                                        .disabledColor),
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        if (_init['Accessible']) {
+                          // globals.launchInBrowser(
+                          //   '${globals.apiUrl}/employee/family/document/download/${_init['employeeID']}/${_init['axid']}',
+                          // );
+
+                          Navigator.pushNamed(
+                            context,
+                            Routes.downloader,
+                            arguments: {
+                              'name':
+                                  '(${_init['Id']}) File',
+                              'link':
+                                  '${globals.apiUrl}/ess/employee/DownloadDocumentRequest/${_init['Id']}/${_init['Filename']}',
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                (_readonly && _init['Attachment']['Accessible']) 
+                  ? SizedBox(height: 10)
+                  : Container(),
+                (_readonly && _init['Attachment']['Accessible']) 
+                  ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
+                    child: InkWell(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.file_download,
+                            color: (_init['Attachment']['Accessible'])
+                                ? null
+                                : Theme.of(context).disabledColor,
+                          ),
+                          Text(
+                            AppLocalizations.of(context).translate(
+                                'DownloadReqDocument'),
+                            style: (_init['Attachment']['Accessible'])
+                                ? null
+                                : TextStyle(
+                                    color: Theme.of(context)
+                                        .disabledColor),
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        if (_init['Attachment']['Accessible']) {
+                          // globals.launchInBrowser(
+                          //   '${globals.apiUrl}/employee/family/document/download/${_init['employeeID']}/${_init['axid']}',
+                          // );
+
+                          Navigator.pushNamed(
+                            context,
+                            Routes.downloader,
+                            arguments: {
+                              'name':
+                                  '(${_init['Id']}) Document',
+                              'link':
+                                  '${globals.apiUrl}/ess/employee/DownloadDocRequestResult/${_init['Id']}/${_init['Filename']}',
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  )
+                  : Container()
               ],
             ),
           ) : AppLoading();

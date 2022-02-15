@@ -1,4 +1,5 @@
-import 'package:ess_mobile/models/datetime_model.dart';
+import 'datetime_model.dart';
+import 'attachment_model.dart';
 
 class DocumentModel {
   String? documentType;
@@ -132,6 +133,7 @@ class DocumentRequestModel {
   String? lastUpdate;
   String? updateBy;
   dynamic updateRequest;
+  AttachmentModel? attachment;
 
   DocumentRequestModel({
     this.requestDate,
@@ -159,6 +161,7 @@ class DocumentRequestModel {
     this.lastUpdate,
     this.updateBy,
     this.updateRequest,
+    this.attachment
   });
 
   DocumentRequestModel.fromJson(Map<String, dynamic> json) {
@@ -189,6 +192,9 @@ class DocumentRequestModel {
     lastUpdate = json['LastUpdate'];
     updateBy = json['UpdateBy'];
     updateRequest = json['UpdateRequest'];
+    attachment = json['Attachment'] != null
+        ? new AttachmentModel.fromJson(json['Attachment'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -220,6 +226,9 @@ class DocumentRequestModel {
     data['LastUpdate'] = this.lastUpdate;
     data['UpdateBy'] = this.updateBy;
     data['UpdateRequest'] = this.updateRequest;
+    if (this.attachment != null) {
+      data['Attachment'] = this.attachment?.toJson();
+    }
     return data;
   }
 }

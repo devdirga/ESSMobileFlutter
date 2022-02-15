@@ -398,7 +398,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                               ),
                               Text(
                                 AppLocalizations.of(context).translate(
-                                    'DownloadFile'),
+                                    'DownloadTicket'),
                                 style: (_init['Accessible'])
                                     ? null
                                     : TextStyle(
@@ -478,7 +478,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                                 ),
                                 Text(
                                   AppLocalizations.of(context).translate(
-                                      'DownloadFile'),
+                                      'DownloadResolution'),
                                   style: (_init['Accessible'])
                                       ? null
                                       : TextStyle(
@@ -503,7 +503,7 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                         )
                       : _formInputGroup(
                         AppLocalizations.of(context)
-                            .translate('Attachment'),
+                            .translate('ResolutionFile'),
                         true,
                         FormBuilderTextField(
                           name: 'FilePicker',
