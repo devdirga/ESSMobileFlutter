@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_path_provider/android_path_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -283,7 +283,7 @@ class _DownloaderState extends State<Downloader> {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     if (globals.platform == TargetPlatform.android &&
-        androidInfo.version.sdkInt <= 28) {
+        androidInfo.version.sdkInt! <= 28) {
       final status = await Permission.storage.status;
       if (status != PermissionStatus.granted) {
         final result = await Permission.storage.request();

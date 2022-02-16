@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
 import 'package:ess_mobile/utils/routes.dart';
@@ -62,14 +63,16 @@ class MyApp extends StatelessWidget {
 
                   switch (authProviderRef.status) {
                     case AppStatus.Uninitialized:
-                      return SplashScreen();
+                      //return SplashScreen();
 
                     case AppStatus.Registered:
                     case AppStatus.Unregistered:
                     case AppStatus.Unauthenticated:
+                      FlutterNativeSplash.remove();
                       return LoginScreen();
 
                     case AppStatus.Authenticated:
+                      FlutterNativeSplash.remove();
                       return DashboardScreen();
 
                     default:

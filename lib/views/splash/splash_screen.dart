@@ -23,6 +23,10 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            /*Image.asset("assets/images/loadingPageFinal.gif", 
+              gaplessPlayback: true, 
+              fit: BoxFit.cover,
+            )*/
             AppLogo(size: 120),
             SizedBox(height: 30),
             Text(
