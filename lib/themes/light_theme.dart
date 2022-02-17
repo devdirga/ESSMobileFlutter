@@ -61,7 +61,9 @@ final ThemeData lightTheme = ThemeData(
     hoverColor: Color(0x0a000000),
     colorScheme: ColorScheme(
       primary: Color(0xff1a4fb2),
+      primaryVariant: Color(0xff1a4fb2),
       secondary: Color(0xff2163de),
+      secondaryVariant: Color(0xff2163de),
       surface: Color(0xffffffff),
       background: Color(0xffa6c1f2),
       error: Color(0xffd32f2f),

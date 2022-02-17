@@ -5,6 +5,7 @@ import 'package:ess_mobile/models/user_model.dart';
 import 'package:ess_mobile/services/attendance_service.dart';
 import 'package:ess_mobile/services/survey_service.dart';
 import 'package:ess_mobile/utils/api_response.dart';
+import 'package:ess_mobile/utils/shared_preference.dart';
 import 'package:ess_mobile/views/attendance/attendance_screen.dart';
 import 'package:ess_mobile/widgets/loading.dart';
 import 'package:ess_mobile/widgets/loadingtext.dart';
@@ -40,10 +41,17 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
   bool _loading = false;
   bool isInRadius = false;
   NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
+  AppSharedPreference _sharedPrefsHelper = AppSharedPreference(); 
 
   @override
   void initState() {
     super.initState();
+    _sharedPrefsHelper.isDisclaimerLoc.then((statusValue) {
+      if(statusValue == false){
+        _showDialog();
+      }
+    });
+    
     getCurrentLocation();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status != AppStatus.Authenticated) {
@@ -52,6 +60,28 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
         Navigator.of(context).pushNamedAndRemoveUntil(Routes.login, ModalRoute.withName(Routes.login));
       }
     });
+  }
+
+  _showDialog() async {
+    await Future.delayed(Duration(milliseconds: 50));
+    
+    showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
+      title: new Text("Location Authorization"),
+      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary!\n" + 
+      "Therefore you should allow access to the location of this device in the next dialog.\n"+
+      "Location access is only used to:\n"+
+      "- correct tha app time\n"+
+      "- measure the distance traveled\n"+
+      "- these data are only stored on the device under the memory allocated by the app and can be deleted by the user at any time"),
+      actions: <Widget>[
+        new ElevatedButton(
+          onPressed: (){
+            _sharedPrefsHelper.saveDisclaimerLoc(true);
+            
+            Navigator.of(context).pop();
+        }, child: new Text("OK"))
+      ]
+    ));
   }
 
   getCurrentLocation() async {

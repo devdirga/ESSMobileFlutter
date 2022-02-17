@@ -9,6 +9,7 @@ class AppSharedPreference {
   static const String language_code = 'languageCode';
   static const String download_document = 'downloadDocument';
   static const String login_data = 'loginData';
+  static const String is_disclaimer_loc = 'isDisclaimerLoc';
 
   AppSharedPreference() {
     _sharedPreference = SharedPreferences.getInstance();
@@ -108,4 +109,18 @@ class AppSharedPreference {
       return prefs?.remove(download_document);
     });
   }
+
+  // IsDisclaimer
+  Future<bool> get isDisclaimerLoc {
+    return _sharedPreference!.then((prefs) {
+      return prefs?.getBool(is_disclaimer_loc) ?? false;
+    });
+  }
+
+  Future<bool> saveDisclaimerLoc(bool value) {
+    return _sharedPreference!.then((prefs) {
+      return prefs!.setBool(is_disclaimer_loc, value);
+    });
+  }
+
 }
