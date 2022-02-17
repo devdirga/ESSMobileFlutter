@@ -464,6 +464,11 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 }
               }
 
+              Future.delayed(Duration(seconds: 3), () async {
+                setState(() {
+                  _loading = false;
+                });
+              });
               
             },
           );
