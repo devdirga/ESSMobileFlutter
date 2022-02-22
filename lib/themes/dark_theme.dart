@@ -61,9 +61,9 @@ final ThemeData darkTheme = ThemeData(
     hoverColor: Color(0x0affffff),
     colorScheme: ColorScheme(
       primary: Color(0xff1a4fb2),
-      primaryVariant: Color(0xff1a4fb2),
+      primaryContainer: Color(0xff1a4fb2),
       secondary: Color(0xff2163de),
-      secondaryVariant: Color(0xff2163de),
+      secondaryContainer: Color(0xff2163de),
       surface: Color(0xff424242),
       background: Color(0xff616161),
       error: Color(0xffd32f2f),

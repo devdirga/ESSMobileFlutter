@@ -67,12 +67,12 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
     
     showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
       title: new Text("Location Authorization"),
-      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary!\n" + 
+      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary.\n" + 
       "Therefore you should allow access to the location of this device in the next dialog.\n"+
       "Location access is only used to:\n"+
-      "- correct tha app time\n"+
+      "- check your current location for attendance\n"+
       "- measure the distance traveled\n"+
-      "- these data are only stored on the device under the memory allocated by the app and can be deleted by the user at any time"),
+      "These data are only stored on the device under the memory allocated by the app and can be deleted by the user at any time"),
       actions: <Widget>[
         new ElevatedButton(
           onPressed: (){
