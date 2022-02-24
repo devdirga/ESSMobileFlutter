@@ -72,7 +72,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
       title: new Text("Location Authorization"),
       content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary.\n" + 
       "Therefore you should allow access to the location of this device.\n"+
-      "ESS TPS will collect background location data while always in use to enable:\n"+
+      "ESS TPS will collect location data even when your app is in background to enable:\n"+
       "- checking your current location for Attendance\n"+
       "- measuring the distance between your current location for validate absence"),
       actions: <Widget>[
