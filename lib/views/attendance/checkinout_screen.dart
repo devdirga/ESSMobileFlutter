@@ -50,9 +50,12 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
       if(statusValue == false){
         _showDialog();
       }
+      else {
+        getCurrentLocation();
+      }
     });
     
-    getCurrentLocation();
+    
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status != AppStatus.Authenticated) {
         context.read<AuthProvider>().signOut();
@@ -67,17 +70,16 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
     
     showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
       title: new Text("Location Authorization"),
-      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary!\n" + 
-      "Therefore you should allow access to the location of this device in the next dialog.\n"+
-      "Location access is only used to:\n"+
-      "- correct tha app time\n"+
-      "- measure the distance traveled\n"+
-      "- these data are only stored on the device under the memory allocated by the app and can be deleted by the user at any time"),
+      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary.\n" + 
+      "Therefore you should allow access to the location of this device.\n"+
+      "ESS TPS will collect background location data while always in use to enable:\n"+
+      "- checking your current location for Attendance\n"+
+      "- measuring the distance between your current location for validate absence"),
       actions: <Widget>[
         new ElevatedButton(
           onPressed: (){
             _sharedPrefsHelper.saveDisclaimerLoc(true);
-            
+            getCurrentLocation();
             Navigator.of(context).pop();
         }, child: new Text("OK"))
       ]
