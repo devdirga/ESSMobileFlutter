@@ -168,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
       messages: _messages,
       user: _author,
       onAttachmentPressed: _handleAtachmentPressed,
-      onMessageTap: _handleMessageTap,
+      // onMessageTap: _handleMessageTap,
       onPreviewDataFetched: _handlePreviewDataFetched,
       onSendPressed: _handleSendPressed,
       onEndReached: _handleEndReached,
