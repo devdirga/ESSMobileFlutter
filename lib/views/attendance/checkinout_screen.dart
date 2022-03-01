@@ -126,7 +126,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                   // selectedLocation = chooseLocation(nearest);
                   nearest = getAssignedLocation(currentLocation.latitude, currentLocation.longitude, locationlist);
                   selectedLocation = chooseAssignedLocation(nearest);
-
+                  _loading = false;
                   allready = true;
                 });
               }    
