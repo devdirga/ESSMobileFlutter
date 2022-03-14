@@ -182,7 +182,7 @@ class TimeManagementService {
   }
 
   Future<ApiResponse> timeAttendanceSave(
-      String route, PlatformFile fileDoc, String data, String reason) async {
+      String route, PlatformFile? fileDoc, String data, String reason) async {
     var _apiResponse = ApiResponse.loading('Saving Data');
 
     try {
@@ -193,12 +193,14 @@ class TimeManagementService {
       request.headers.addAll(headers);
       request.fields['JsonData'] = data;
       request.fields['Reason'] = reason;
-      request.files.add(http.MultipartFile(
-        'FileUpload',
-        fileDoc.readStream!,
-        fileDoc.size,
-        filename: fileDoc.name,
-      ));
+      if(fileDoc != null){
+        request.files.add(http.MultipartFile(
+          'FileUpload',
+          fileDoc.readStream!,
+          fileDoc.size,
+          filename: fileDoc.name,
+        ));
+      }
 
       final response = await request.send();
       String stream = await response.stream.bytesToString();

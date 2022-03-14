@@ -38,6 +38,7 @@ class _RecommendationAbsenceScreenState
   bool _disabled = true;
   bool _readonly = true;
   bool _loading = false;
+  bool _attachment = false;
   DateTime? _actualLogedDate;
 
   @override
@@ -257,7 +258,15 @@ class _RecommendationAbsenceScreenState
                                         item['DescriptionField'].toString()),
                                   ))
                               .toList(),
-                          onChanged: (val) {},
+                          onChanged: (val) {
+                            _absenceCode.forEach((v) {
+                              if (v['DescriptionField'].toString() == val.toString()) {
+                                setState(() {
+                                  _attachment = v['IsAttachment'];
+                                }); 
+                              }
+                            });  
+                          },
                           valueTransformer: (String? val) => val.toString(),
                         ),
                       ),
@@ -342,7 +351,7 @@ class _RecommendationAbsenceScreenState
                         ),
                       ),
                       SizedBox(height: 10),
-                      (!_readonly)
+                      (!_readonly && _attachment)
                           ? _formInputGroup(
                               AppLocalizations.of(context)
                                   .translate('DocumentVerification'),
@@ -575,49 +584,49 @@ class _RecommendationAbsenceScreenState
         return;
       }
 
-      if (_filePicker != null) {
+      //if (_filePicker != null) {
+      setState(() {
+        _disabled = true;
+        _loading = true;
+      });
+
+      ApiResponse<dynamic> upload =
+          await _timeManagementService.timeAttendanceSave(
+        (_data.axid == -1) ? 'Create' : 'Update',
+        _filePicker,
+        JsonEncoder().convert(_data.toJson()),
+        _data.reason!,
+      );
+
+      if (upload.status == ApiStatus.ERROR) {
+        AppSnackBar.danger(context, upload.message);
+      }
+
+      if (upload.status == ApiStatus.COMPLETED) {
+        if (upload.data['StatusCode'] == 200) {
+          AppSnackBar.success(context, upload.data['Message'].toString());
+          Navigator.pop(context);
+        }
+
+        if (upload.data['StatusCode'] == 400) {
+          AppSnackBar.danger(context, upload.data['Message'].toString());
+        }
+      }
+
+      Future.delayed(Duration.zero, () async {
         setState(() {
-          _disabled = true;
-          _loading = true;
+          _disabled = false;
+          _loading = false;
+          _filePicker = null;
+          _formKey.currentState!.fields['FilePicker']!.didChange('');
         });
-
-        ApiResponse<dynamic> upload =
-            await _timeManagementService.timeAttendanceSave(
-          (_data.axid == -1) ? 'Create' : 'Update',
-          _filePicker!,
-          JsonEncoder().convert(_data.toJson()),
-          _data.reason!,
-        );
-
-        if (upload.status == ApiStatus.ERROR) {
-          AppSnackBar.danger(context, upload.message);
-        }
-
-        if (upload.status == ApiStatus.COMPLETED) {
-          if (upload.data['StatusCode'] == 200) {
-            AppSnackBar.success(context, upload.data['Message'].toString());
-            Navigator.pop(context);
-          }
-
-          if (upload.data['StatusCode'] == 400) {
-            AppSnackBar.danger(context, upload.data['Message'].toString());
-          }
-        }
-
-        Future.delayed(Duration.zero, () async {
-          setState(() {
-            _disabled = false;
-            _loading = false;
-            _filePicker = null;
-            _formKey.currentState!.fields['FilePicker']!.didChange('');
-          });
-        });
-      } else {
+      });
+      /* } else {
         AppAlert(context).attachment(
           title:
               AppLocalizations.of(context).translate('RecommendationAbsence'),
         );
-      }
+      } */
     });
   }
 }
