@@ -79,7 +79,7 @@ class _LazyLoadingPageState extends State<LazyLoadingPage> {
           String formattedTime = '';
           String formattedDate = '';
           if(logs.length > 0){
-            var parsedDate = DateTime.parse(logs[i].createdDate.toString());
+            var parsedDate = DateTime.parse(logs[i].dateTime.toString());
             formattedTime = DateFormat('HH:mm:ss').format(parsedDate); 
             formattedDate = DateFormat.yMMMMd().format(parsedDate);
           }

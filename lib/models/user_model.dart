@@ -297,11 +297,12 @@ class ActivityLogModel {
   String? submittedBy;
   String? entityName;
   String? createdDate;
+  String? dateTime;
   String? createdBy;
   ActivityTypeMapModel? activityType;
   LocationMapModel? location;
   UserMapModel? user;
-  ActivityLogModel({this.id,this.latitute,this.longitute,this.submittedBy,this.entityName,this.createdDate,this.createdBy, this.activityType, this.location,this.user});
+  ActivityLogModel({this.id,this.latitute,this.longitute,this.submittedBy,this.entityName,this.createdDate,this.dateTime,this.createdBy, this.activityType, this.location,this.user});
   ActivityLogModel.fromJson(Map<String, dynamic> json){
     id=json['id'];
     latitute=json['latitute'];
@@ -309,6 +310,7 @@ class ActivityLogModel {
     submittedBy=json['submittedBy'];
     entityName=json['entityName'];
     createdDate=json['createdDate'];
+    dateTime=json['dateTime'];
     createdBy=json['createdBy'];  
     activityType= new ActivityTypeMapModel(activityTypeID: json['activityType']['activityTypeID'], activityTypeName: json['activityType']['activityTypeName']);
     location=new LocationMapModel(locationID: json['location']['locationID'], locationName: json['location']['locationName'], locationAddress: json['location']['locationAddress']);
@@ -322,6 +324,7 @@ class ActivityLogModel {
     data['submittedBy']=this.submittedBy;
     data['entityName']=this.entityName;
     data['createdDate']=this.createdDate;
+    data['dateTime']=this.dateTime;
     data['createdBy']=this.createdBy;
     return data;
   }
