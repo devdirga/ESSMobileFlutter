@@ -6,7 +6,6 @@ import 'package:ess_mobile/services/attendance_service.dart';
 import 'package:ess_mobile/services/survey_service.dart';
 import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/utils/shared_preference.dart';
-import 'package:ess_mobile/views/attendance/attendance_screen.dart';
 import 'package:ess_mobile/widgets/loading.dart';
 import 'package:ess_mobile/widgets/loadingtext.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';

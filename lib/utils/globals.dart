@@ -7,7 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:ess_mobile/models/auth_model.dart';
 import 'package:ess_mobile/models/chat_model.dart';
 
-//const apiUrl = 'http://123.231.248.72:9091'; // DEV
+// const apiUrl = 'http://123.231.248.72:9091'; // DEV
 const apiUrl = 'https://ess.tps.co.id'; // PRD
 const fcmUrl = 'https://fcm.googleapis.com/fcm/send';
 const fcmServerKey =

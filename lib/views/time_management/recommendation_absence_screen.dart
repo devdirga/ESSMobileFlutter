@@ -9,7 +9,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:ess_mobile/widgets/scaffold.dart';
 import 'package:ess_mobile/widgets/loading.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';
-import 'package:ess_mobile/widgets/alert.dart';
 import 'package:ess_mobile/providers/auth_provider.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
@@ -621,12 +620,6 @@ class _RecommendationAbsenceScreenState
           _formKey.currentState!.fields['FilePicker']!.didChange('');
         });
       });
-      /* } else {
-        AppAlert(context).attachment(
-          title:
-              AppLocalizations.of(context).translate('RecommendationAbsence'),
-        );
-      } */
     });
   }
 }

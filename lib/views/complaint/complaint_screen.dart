@@ -566,7 +566,7 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
     item.absenceCodeDescription ??= '';*/
 
     List _status = ['Open', 'Progress', 'Closed', 'Reopen'];
-    List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
+    //List _type = ['Complaint', 'Question', 'Incident', 'FutureRequest'];
     List<Color> _colorStatus = [
       Colors.blue,
       Colors.green,

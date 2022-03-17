@@ -409,7 +409,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.resumeDetail,
@@ -433,7 +433,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.familyDetail,
@@ -460,7 +460,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.certificateDetail,
@@ -484,7 +484,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.leaveDetail,
@@ -509,7 +509,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.absenceDetail,
@@ -533,7 +533,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.sppdDetail,
@@ -566,7 +566,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
                 globals.params = {'User': _item['EmployeeID']};
 
-                Future.delayed(Duration(seconds: 2), () async {
+                Future.delayed(Duration(seconds: 1), () async {
                   Navigator.pushNamed(
                     context,
                     Routes.complaintDetail,

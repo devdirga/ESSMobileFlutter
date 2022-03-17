@@ -7,7 +7,6 @@ import 'package:ess_mobile/widgets/datepicker.dart';
 import 'package:ess_mobile/widgets/space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 
 class LazyLoadingPage extends StatefulWidget {

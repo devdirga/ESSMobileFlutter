@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'dart:io';
+//import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:ess_mobile/widgets/drawer.dart';
 import 'package:ess_mobile/widgets/background.dart';
 import 'package:ess_mobile/widgets/space.dart';
-import 'package:ess_mobile/widgets/alert.dart';
-import 'package:ess_mobile/widgets/snackbar.dart';
+//import 'package:ess_mobile/widgets/alert.dart';
+//import 'package:ess_mobile/widgets/snackbar.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
 import 'package:ess_mobile/utils/routes.dart';
-import 'package:ess_mobile/utils/api_response.dart';
+//import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/providers/auth_provider.dart';
 import 'package:ess_mobile/providers/theme_provider.dart';
 //import 'package:ess_mobile/services/resume_service.dart';
@@ -48,7 +48,7 @@ class AppScaffold extends StatefulWidget {
 
 class _AppScaffoldState extends State<AppScaffold> {
   //final ResumeService _resumeService = ResumeService();
-  final AuthProvider _authProvider = AuthProvider();
+  //final AuthProvider _authProvider = AuthProvider();
 
   bool _darkMode = false;
   String _profilePict = (globals.appAuth.user != null &&

@@ -85,7 +85,7 @@ class _PayslipScreenState extends State<PayslipScreen> {
                   Map<String, List<PayslipModel>> _dataMap = {};
 
                   _response.data.sort((a, b) {
-                    return a.axid.toString().compareTo(b.axid.toString());
+                    return a.year.toString().compareTo(b.year.toString());
                   });
 
                   _response.data.reversed.forEach((v) {
@@ -101,6 +101,9 @@ class _PayslipScreenState extends State<PayslipScreen> {
                   bool _expanded = true;
 
                   _dataMap.forEach((k, v) {
+                    v.sort((a, b) {
+                      return a.month!.compareTo(b.month!);
+                    });
                     _children
                         .add(_buildExpansionTile(context, k, v, _expanded));
                     _expanded = false;
@@ -155,7 +158,7 @@ class _PayslipScreenState extends State<PayslipScreen> {
     List<DataRow> _dataRows = <DataRow>[];
 
     if (items.length > 0) {
-      items.forEach((v) {
+      items.reversed.forEach((v) {
         _dataRows.add(DataRow(
           cells: _dataCells(v),
         ));
