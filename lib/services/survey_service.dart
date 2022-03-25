@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:ess_mobile/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
@@ -276,5 +277,31 @@ class SurveyService {
     }
   }
 
+  Future<ApiResponse> getAbsenceTemporary(Map<String, dynamic> body) async {
+    var _apiResponse = ApiResponse.loading('Fetching Absence');
+    try {
+      final response = await _restApi.get(
+        '${globals.apiUrl}/api/absence/getabsencetemporary',
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $_apiToken',
+        },
+      );
+
+      ResponseModel _res = ResponseModel.fromJson(response);
+      List<ActivityLogModel> _data = [];
+
+      if (response['Data'] != null) {
+        response['Data'].forEach((v) {
+          _data.add(ActivityLogModel.fromJson(v));
+        });
+      }
+      _res.data = _data;
+      _apiResponse = ApiResponse.completed(_res);
+    } catch (e) {
+      _apiResponse = ApiResponse.error(e.toString());
+    }
+    return _apiResponse;
+  }
 
 }
