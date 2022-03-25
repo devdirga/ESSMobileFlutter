@@ -277,7 +277,7 @@ class SurveyService {
     }
   }
 
-  Future<ApiResponse> getAbsenceTemporary(Map<String, dynamic> body) async {
+  Future<ApiResponse> getAbsenceTemporary() async {
     var _apiResponse = ApiResponse.loading('Fetching Absence');
     try {
       final response = await _restApi.get(

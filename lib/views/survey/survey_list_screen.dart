@@ -26,6 +26,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
   final SurveyService _surveyService = SurveyService();
 
   Future<ApiResponse<dynamic>>? _surveys;
+  List<SurveyModel> _listSurvey = [];
 
   Map<String, dynamic> getValue = {
     'Start':
@@ -34,6 +35,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
   };
 
   bool _loading = false;
+  int _listRequiredSurvey = 0;
 
   @override
   void initState() {
@@ -48,6 +50,14 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
           Routes.login,
           ModalRoute.withName(Routes.login),
         );
+      }
+    });
+
+    _surveyService.getAbsenceTemporary().then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data.length > 0) {
+          _listSurvey = v.data.data;
+        }
       }
     });
 
@@ -111,6 +121,11 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                             // Use default value for other states and odd rows.
                           })
                         ));
+                        if(v.alreadyFilled == false && v.isRequired == true){
+                          setState(() {
+                            _listRequiredSurvey = _listRequiredSurvey + 1;
+                          });
+                        }
                         indexData++;
                       });
                     }
@@ -169,14 +184,14 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                   : AppLoading();
             },
           ),
-          ElevatedButton.icon(
+          _listSurvey.isNotEmpty && _listRequiredSurvey == 0 ? ElevatedButton.icon(
             onPressed: (){
               updateMobileAttendance();
             }, 
             label: Text('Update Mobile Attendance'),
             icon: Icon(Icons.update),
             style: ElevatedButton.styleFrom(primary: Colors.blue)
-          ),
+          ) : Container(),
         ],
       )
     );
