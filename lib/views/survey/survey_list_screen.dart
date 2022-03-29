@@ -25,8 +25,8 @@ class SurveyListScreen extends StatefulWidget {
 class _SurveyListScreenState extends State<SurveyListScreen> {
   final SurveyService _surveyService = SurveyService();
 
-  Future<ApiResponse<dynamic>>? _surveys;
-  List<SurveyModel> _listSurvey = [];
+  late Future<ApiResponse<dynamic>> _surveys;
+  late Future<ApiResponse<dynamic>> _temporary;
 
   Map<String, dynamic> getValue = {
     'Start':
@@ -35,7 +35,6 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
   };
 
   bool _loading = false;
-  int _listRequiredSurvey = 0;
 
   @override
   void initState() {
@@ -53,19 +52,10 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
       }
     });
 
-    _surveyService.getAbsenceTemporary().then((v) {
-      if (v.status == ApiStatus.COMPLETED) {
-        if (v.data.data.length > 0) {
-          _listSurvey = v.data.data;
-        }
-      }
-    });
-
-    Future.delayed(Duration.zero, () async {
-      setState(() {
-        _surveys = _surveyService
-            .surveys(globals.getFilterRequest(params: getValue));
-      });
+    setState(() {
+      _surveys = _surveyService
+          .surveys(globals.getFilterRequest(params: getValue));
+      _temporary = _surveyService.getAbsenceTemporary();
     });
   }
 
@@ -121,11 +111,6 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                             // Use default value for other states and odd rows.
                           })
                         ));
-                        if(v.alreadyFilled == false && v.isRequired == true){
-                          setState(() {
-                            _listRequiredSurvey = _listRequiredSurvey + 1;
-                          });
-                        }
                         indexData++;
                       });
                     }
@@ -184,14 +169,34 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
                   : AppLoading();
             },
           ),
-          _listSurvey.isNotEmpty && _listRequiredSurvey == 0 ? ElevatedButton.icon(
-            onPressed: (){
-              updateMobileAttendance();
-            }, 
-            label: Text('Update Mobile Attendance'),
-            icon: Icon(Icons.update),
-            style: ElevatedButton.styleFrom(primary: Colors.blue)
-          ) : Container(),
+          FutureBuilder(
+            future: Future.wait([_surveys, _temporary]),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                var respSurveys = snapshot.data![0].data;
+                var respTemps = snapshot.data![1].data;
+                int countSurvey = 0;
+                
+                respSurveys.data.reversed.forEach((v) {
+                  if(v.alreadyFilled == false && v.isRequired == true){
+                    countSurvey++;
+                  }
+                });
+                
+                if(respTemps.data.isNotEmpty && countSurvey == 0) {
+                  return ElevatedButton.icon(
+                    onPressed: (){
+                      updateMobileAttendance();
+                    }, 
+                    label: Text('Update Mobile Attendance'),
+                    icon: Icon(Icons.update),
+                    style: ElevatedButton.styleFrom(primary: Colors.blue)
+                  );
+                }
+              }
+              return Container();
+            }
+          )
         ],
       )
     );
@@ -252,7 +257,7 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
           radius: 14,
           backgroundColor:
               Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
-          child: item.isRequired! ? Icon(Icons.check_box_outline_blank, color: Colors.black) : Icon(Icons.priority_high, color: Colors.red)
+          child: item.isRequired! ? Icon(Icons.priority_high, color: Colors.red) : Icon(Icons.check_box_outline_blank, color: Colors.black)
         )
       ),
     ];
