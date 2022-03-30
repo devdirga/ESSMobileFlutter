@@ -56,7 +56,10 @@ dependencies:
   webview_flutter: ^2.3.1
   flutter_html: ^2.1.5
 
-  excel: ^2.0.0-null-safety-3
+  excel:
+    git:
+      url: https://github.com/justkawal/excel.git
+      ref: null-safety
 
   flutter_map:
   latlong: ^0.6.1

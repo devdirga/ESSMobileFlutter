@@ -62,21 +62,15 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
         );
       }
     });
+
+    _taskHistory = _commonService.taskHistory(widget.filterRequest);
   }
 
   @override
   Widget build(BuildContext context) {
-    _taskHistory = _commonService.taskHistory(widget.filterRequest);
-
-    return LoadingOverlay(
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: _container(context),
-        ),
-        isLoading: _loading,
-        // demo of some additional parameters
-        opacity: 0.5,
-        progressIndicator: CircularProgressIndicator(),
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: _container(context),
     );
   }
 
@@ -162,7 +156,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
             }
           }
 
-          return (snapshot.connectionState == ConnectionState.done)
+          return (snapshot.connectionState == ConnectionState.done) && _loading == false
               ? ListView(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -396,6 +390,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
   }
 
   void _detail(TaskModel item) async {
+    setState(() {
+      _loading = true;
+    });
     try {
       switch (item.requestType) {
         case 0:
@@ -403,6 +400,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .profileByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -427,6 +427,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .familyByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -454,6 +457,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .certificateByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -478,6 +484,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .leaveByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -503,6 +512,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
                   item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -527,6 +539,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .travelByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
@@ -560,6 +575,9 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .complaintByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
             if (v.status == ApiStatus.COMPLETED) {
+              setState(() {
+                _loading = false;
+              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;

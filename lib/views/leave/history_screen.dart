@@ -195,9 +195,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
-            leading: InkWell(
-              child: Icon(Icons.file_download, color: Colors.white),
-              onTap: () => _downloadExcel(title, items),
+            leading: TextButton.icon(
+              icon: Icon(Icons.file_download, color: Colors.white),
+              label: Text(''),
+              onPressed: () => _downloadExcel(title, items),
             ),
             title: Text(
               title,
