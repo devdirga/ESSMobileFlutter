@@ -486,10 +486,13 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
               if(temporary){
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                      action: SnackBarAction(label: 'OK',onPressed: () {}),
+                      action: SnackBarAction(label: 'OK',onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.survey, ModalRoute.withName(Routes.survey));
+                      }),
                       // content:  Text('${upl.data['Message'].toString()}'),
                       content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
-                      duration: const Duration(milliseconds: 5000),
+                      duration: const Duration(milliseconds: 10000),
                       behavior: SnackBarBehavior.floating
                     )
                 );
