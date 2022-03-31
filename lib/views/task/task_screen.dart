@@ -87,7 +87,7 @@ class _TaskScreenState extends State<TaskScreen> {
               });
             },
           ),
-          visible: (tabIndex == 0) ? false : true,
+          visible: true,
         ),
       ),
     );

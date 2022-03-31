@@ -46,6 +46,7 @@ class _ResumeDetailState extends State<ResumeDetail> {
   List<Map<String, dynamic>> _taxes = [];
   AddressModel _address = AddressModel();
   bool _readonly = true;
+  String _trackingStatusDesc = 'InReview';
   Map<String, bool> _change = {};
   Map<String, int> _upload = {};
 
@@ -372,6 +373,8 @@ class _ResumeDetailState extends State<ResumeDetail> {
                 _upload[k.toString()] = 0;
               });
             }
+
+             _init['TrackingStatusDescription'] = _trackingStatusDesc;
           }
 
           return (snapshot.connectionState == ConnectionState.done)
@@ -383,6 +386,23 @@ class _ResumeDetailState extends State<ResumeDetail> {
                   enabled: !_readonly,
                   child: Column(
                     children: [
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                       'Status',
+                        FormBuilderTextField(
+                          name: 'TrackingStatusDescription',
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Reason'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          maxLines: 1,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('EmployeeID'),
                         'EmployeeID',
@@ -1202,10 +1222,9 @@ class _ResumeDetailState extends State<ResumeDetail> {
     if (_args != null) {
       Map<String, dynamic> _val = _args as Map<String, dynamic>;
 
-      _val.forEach((k, v) {
-        if (k == 'Readonly') {
-          _readonly = v ??= true;
-        }
+       _val.forEach((k, v) {
+        if(k == 'Readonly') _readonly = v ?? true;
+        if(k == 'TrackingStatusDescription') _trackingStatusDesc = v ?? 'InReview';
       });
 
       return EmployeeModel.fromJson(_val);

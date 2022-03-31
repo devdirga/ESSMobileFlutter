@@ -35,6 +35,7 @@ class _CertificateDetailState extends State<CertificateDetail> {
   PlatformFile? _filePicker;
   bool _disabled = true;
   bool _readonly = true;
+  String _trackingStatusDesc = 'InReview';
   String _requestRenewal = '';
 
   @override
@@ -184,6 +185,7 @@ class _CertificateDetailState extends State<CertificateDetail> {
             }
 
             _init['FilePicker'] = '';
+            _init['TrackingStatusDescription'] = _trackingStatusDesc;
           }
 
           return (snapshot.connectionState == ConnectionState.done)
@@ -195,6 +197,23 @@ class _CertificateDetailState extends State<CertificateDetail> {
                   enabled: !_readonly,
                   child: Column(
                     children: [
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'TrackingStatusDescription',
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Reason'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          maxLines: 1,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('Type'),
                         true,
@@ -475,9 +494,8 @@ class _CertificateDetailState extends State<CertificateDetail> {
       Map<String, dynamic> _val = _args as Map<String, dynamic>;
 
       _val.forEach((k, v) {
-        if (k == 'Readonly') {
-          _readonly = v ??= true;
-        }
+        if(k == 'Readonly') _readonly = v ?? true;
+        if(k == 'TrackingStatusDescription') _trackingStatusDesc = v ?? 'InReview';
       });
 
       return CertificateModel.fromJson(_val);

@@ -34,7 +34,7 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
   PlatformFile? _filePicker;
   bool _disabled = true;
   bool _readonly = true;
-  
+  String _trackingStatusDesc = 'InReview';
   List<Map<String, dynamic>> _listType = [];
 
   List<Map<String, dynamic>> _listMedia = [
@@ -187,7 +187,7 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
             _init['FilePicker'] = '';
             _init['TicketMedia'] = _init['TicketMedia'].toString();
             _init['TicketType'] = _init['TicketType'].toString();
-
+            _init['TrackingStatusDescription'] = _trackingStatusDesc;
             _init['Category_id'] = null;
 
             if(_init['Category'] != null){
@@ -204,6 +204,23 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
                   enabled: !_readonly,
                   child: Column(
                     children: [
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'TrackingStatusDescription',
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Reason'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          maxLines: 1,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       (_readonly)
                         ? _formInputGroup(
                             AppLocalizations.of(context).translate('OpenTicketDate'),
@@ -530,9 +547,8 @@ class _ComplaintDetailState extends State<ComplaintDetail> {
       Map<String, dynamic> _val = _args as Map<String, dynamic>;
 
       _val.forEach((k, v) {
-        if (k == 'Readonly') {
-          _readonly = v ??= true;
-        }
+        if(k == 'Readonly') _readonly = v ?? true;
+        if(k == 'TrackingStatusDescription') _trackingStatusDesc = v ?? 'InReview';
       });
 
       return ComplaintModel.fromJson(_val);

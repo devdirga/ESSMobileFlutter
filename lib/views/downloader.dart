@@ -28,9 +28,9 @@ class _DownloaderState extends State<Downloader> {
   List<_TaskInfo>? _tasks;
 
   late List<_ItemHolder> _items;
-  late bool _isLoading;
-  late bool _permissionReady;
-  late String _localPath;
+  bool _isLoading = false;
+  bool _permissionReady = false;
+  String _localPath = '';
 
   @override
   void initState() {

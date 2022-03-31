@@ -35,6 +35,7 @@ class _AbsenceDetailState extends State<AbsenceDetail> {
   PlatformFile? _filePicker;
   bool _disabled = true;
   bool _readonly = true;
+  String _trackingStatusDesc = 'InReview';
   DateTime? _actualLogedDate;
 
   @override
@@ -215,6 +216,7 @@ class _AbsenceDetailState extends State<AbsenceDetail> {
 
             _init['FilePicker'] = '';
             _actualLogedDate = _init['ActualLogedDateStartPicker'];
+            _init['TrackingStatusDescription'] = _trackingStatusDesc;
           }
 
           return (snapshot.connectionState == ConnectionState.done)
@@ -226,6 +228,23 @@ class _AbsenceDetailState extends State<AbsenceDetail> {
                   enabled: !_readonly,
                   child: Column(
                     children: [
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'TrackingStatusDescription',
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Reason'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          maxLines: 1,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context).translate('AbsenceCode'),
                         true,
@@ -424,7 +443,7 @@ class _AbsenceDetailState extends State<AbsenceDetail> {
                                     // globals.launchInBrowser(
                                     //   '${globals.apiUrl}/timemanagement/download/${_init['employeeID']}/${_init['axRequestID']}',
                                     // );
-
+                                    print('${globals.apiUrl}/ess/timemanagement/MDownload/${_init['EmployeeID']}/${_init['AXRequestID']}/${_init['Filename']}');
                                     Navigator.pushNamed(
                                       context,
                                       Routes.downloader,
@@ -500,9 +519,8 @@ class _AbsenceDetailState extends State<AbsenceDetail> {
       Map<String, dynamic> _val = _args as Map<String, dynamic>;
 
       _val.forEach((k, v) {
-        if (k == 'Readonly') {
-          _readonly = v ??= true;
-        }
+        if(k == 'Readonly') _readonly = v ?? true;
+        if(k == 'TrackingStatusDescription') _trackingStatusDesc = v ?? 'InReview';
       });
 
       return TimeAttendanceModel.fromJson(_val);

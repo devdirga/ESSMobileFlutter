@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:ess_mobile/widgets/datatable.dart';
 import 'package:ess_mobile/widgets/error.dart';
 import 'package:ess_mobile/widgets/loading.dart';
@@ -393,19 +392,23 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
     setState(() {
       _loading = true;
     });
+
     try {
       switch (item.requestType) {
         case 0:
           _resumeService
               .profileByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -426,13 +429,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
           _familyService
               .familyByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -456,13 +462,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
           _certificateService
               .certificateByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -483,13 +492,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
           _leaveService
               .leaveByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -511,13 +523,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .timeAttendanceByInstance(
                   item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -538,13 +553,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
           _travelService
               .travelByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -574,13 +592,16 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
           _complaintService
               .complaintByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+              
             if (v.status == ApiStatus.COMPLETED) {
-              setState(() {
-                _loading = false;
-              });
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 

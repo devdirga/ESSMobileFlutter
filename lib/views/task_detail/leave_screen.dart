@@ -33,6 +33,7 @@ class _LeaveDetailState extends State<LeaveDetail> {
   PlatformFile? _filePicker;
   bool _disabled = true;
   bool _readonly = true;
+  String _trackingStatusDesc = 'InReview';
   String _effectiveDate = '';
   int _currentRemainder = 0;
   int _waitingApproval = 0;
@@ -259,6 +260,7 @@ class _LeaveDetailState extends State<LeaveDetail> {
             }
 
             _init['FilePicker'] = '';
+            _init['TrackingStatusDescription'] = _trackingStatusDesc;
           }
 
           return (snapshot.connectionState == ConnectionState.done)
@@ -270,6 +272,23 @@ class _LeaveDetailState extends State<LeaveDetail> {
                   enabled: !_readonly,
                   child: Column(
                     children: [
+                      _formInputGroup(
+                        AppLocalizations.of(context).translate('Status'),
+                        true,
+                        FormBuilderTextField(
+                          name: 'TrackingStatusDescription',
+                          decoration: InputDecoration(
+                              // labelText: AppLocalizations.of(context)
+                              //     .translate('Reason'),
+                              ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                          onChanged: (val) {},
+                          maxLines: 1,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       _formInputGroup(
                         AppLocalizations.of(context)
                             .translate('SubtituteEmployee'),
@@ -609,9 +628,8 @@ class _LeaveDetailState extends State<LeaveDetail> {
       Map<String, dynamic> _val = _args as Map<String, dynamic>;
 
       _val.forEach((k, v) {
-        if (k == 'Readonly') {
-          _readonly = v ??= true;
-        }
+        if(k == 'Readonly') _readonly = v ?? true;
+        if(k == 'TrackingStatusDescription') _trackingStatusDesc = v ?? 'InReview';
       });
 
       return LeaveModel.fromJson(_val);

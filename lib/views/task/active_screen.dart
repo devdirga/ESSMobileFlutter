@@ -40,6 +40,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
   final ComplaintService _complaintService = ComplaintService();
 
   Future<ApiResponse<dynamic>>? _taskActive;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -147,7 +148,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
             }
           }
 
-          return (snapshot.connectionState == ConnectionState.done)
+          return (snapshot.connectionState == ConnectionState.done) && _loading == false
               ? ListView(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -350,6 +351,10 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
       desc:
           '${item.submitEmployeeName.toString()} / ${item.submitEmployeeID.toString()}',
       yes: () async {
+        setState(() {
+          _loading = true;
+        });
+
         Map<String, dynamic> body = {
           'InstanceId': item.instanceId,
           'AXID': item.axid,
@@ -379,9 +384,13 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
             AppSnackBar.danger(context, result.data.message.toString());
             setState(() {});
           }
-
-         
         }
+
+        Future.delayed(Duration.zero, () async {
+          setState(() {
+            _loading = false;
+          });
+        });
       },
     );
   }
@@ -392,6 +401,10 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
       desc:
           '${item.submitEmployeeName.toString()} / ${item.submitEmployeeID.toString()}',
       yes: (String? val) async {
+        setState(() {
+          _loading = true;
+        });
+
         item.comment = val.toString().trim();
 
         Map<String, dynamic> body = {
@@ -425,6 +438,12 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
 
           _countTask();
         }
+
+        Future.delayed(Duration.zero, () async {
+          setState(() {
+            _loading = false;
+          });
+        });
       },
     );
   }
@@ -435,6 +454,10 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
       desc:
           '${item.submitEmployeeName.toString()} / ${item.submitEmployeeID.toString()}',
       yes: (String? val) async {
+        setState(() {
+          _loading = true;
+        });
+
         item.comment = val.toString().trim();
 
         Map<String, dynamic> body = {
@@ -468,21 +491,37 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
 
           _countTask();
         }
+
+        Future.delayed(Duration.zero, () async {
+          setState(() {
+            _loading = false;
+          });
+        });
       },
     );
   }
 
   void _detail(TaskModel item) async {
+    setState(() {
+      _loading = true;
+    });
+
     try {
       switch (item.requestType) {
         case 0:
           _resumeService
               .profileByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -503,10 +542,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
           _familyService
               .familyByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -530,10 +575,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
           _certificateService
               .certificateByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -554,10 +605,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
           _leaveService
               .leaveByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -579,10 +636,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
               .timeAttendanceByInstance(
                   item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -603,10 +666,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
           _travelService
               .travelByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 
@@ -636,10 +705,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
           _complaintService
               .complaintByInstance(item.submitEmployeeID!, item.instanceId!)
               .then((v) {
+            setState(() {
+              _loading = false;
+            }); 
+
             if (v.status == ApiStatus.COMPLETED) {
               if (v.data.data != null) {
                 Map<String, dynamic> _item = v.data.data.toJson();
                 _item['Readonly'] = true;
+                _item['TrackingStatus'] = item.trackingStatus;
+                _item['TrackingStatusDescription'] = item.trackingStatusDescription;
 
                 globals.params = {'User': _item['EmployeeID']};
 

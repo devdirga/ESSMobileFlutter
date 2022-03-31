@@ -136,7 +136,7 @@ class TimeAttendanceModel {
     data['StatusDescription'] = this.statusDescription;
     data['AXRequestID'] = this.axRequestID;
     data['AXID'] = this.axid;
-    data['employeeID'] = this.employeeID;
+    data['EmployeeID'] = this.employeeID;
     data['EmployeeName'] = this.employeeName;
     data['Reason'] = this.reason;
     data['OldData'] = this.oldData;
