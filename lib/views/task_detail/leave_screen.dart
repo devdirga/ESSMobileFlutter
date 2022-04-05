@@ -670,10 +670,10 @@ class _LeaveDetailState extends State<LeaveDetail> {
       _data.schedule!.hours ??= 0;
       _data.schedule!.seconds ??= 0;
       _data.schedule!.start = value['ScheduleStartPicker']
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String();
       _data.schedule!.finish = value['ScheduleFinishPicker']
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String();
       _data.pendingRequest = value['ScheduleFinishPicker']
           .difference(value['ScheduleStartPicker'])
@@ -747,10 +747,10 @@ class _LeaveDetailState extends State<LeaveDetail> {
 
   void _checkLeaveExists(DateTime start, DateTime finish) {
     Map<String, dynamic> getValue = {
-      'Start': start.subtract(Duration(hours: 7)).toIso8601String(),
+      'Start': start.toIso8601String(),
       'Finish': finish
           .add(Duration(hours: 23, minutes: 59))
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String(),
     };
 

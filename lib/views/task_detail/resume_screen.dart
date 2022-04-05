@@ -1296,7 +1296,7 @@ class _ResumeDetailState extends State<ResumeDetail> {
             .currentState!
             .fields['IdentificationsStartPicker_' + data['Type'].toString()]!
             .value
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toIso8601String();
       }
 
@@ -1307,7 +1307,7 @@ class _ResumeDetailState extends State<ResumeDetail> {
             .currentState!
             .fields['IdentificationsFinishPicker_' + data['Type'].toString()]!
             .value
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toIso8601String();
       }
 

@@ -600,10 +600,10 @@ class _TravelRequestScreenState extends State<TravelRequestScreen> {
       _data.schedule!.hours ??= 0;
       _data.schedule!.seconds ??= 0;
       _data.schedule!.start = value['scheduleStartPicker']
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String();
       _data.schedule!.finish = value['scheduleFinishPicker']
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String();
 
       if (value['scheduleFinishPicker']

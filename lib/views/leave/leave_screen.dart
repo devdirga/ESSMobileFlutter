@@ -36,8 +36,8 @@ class _LeaveScreenState extends State<LeaveScreen> {
     });
 
     Map<String, dynamic> getValue = {
-      'Start': DateTime.now().subtract(Duration(days: 30, hours: 7)).toIso8601String(),
-      'Finish': DateTime.now().add(Duration(days: 30, hours: 7)).toIso8601String(),
+      'Start': DateTime.now().subtract(Duration(days: 30)).toIso8601String(),
+      'Finish': DateTime.now().add(Duration(days: 30)).toIso8601String(),
     };
 
     _filterReq = globals.getFilterRequest(params: getValue);

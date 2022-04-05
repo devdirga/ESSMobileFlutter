@@ -566,9 +566,9 @@ class _RecommendationAbsenceScreenState
           .toLocal();
 
       _data.actualLogedDate!.start =
-          _loggedDateStart.subtract(Duration(hours: 7)).toIso8601String();
+          _loggedDateStart.toIso8601String();
       _data.actualLogedDate!.finish =
-          _loggedDateFinish.subtract(Duration(hours: 7)).toIso8601String();
+          _loggedDateFinish.toIso8601String();
 
       _absenceCode.forEach((v) {
         if (v['DescriptionField'].toString() ==

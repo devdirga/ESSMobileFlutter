@@ -95,10 +95,10 @@ dynamic getFilterRequest({
 
   String _start = (params != null && params.containsKey('Start'))
       ? params['Start']
-      : today.subtract(Duration(days: 30, hours: 7)).toIso8601String();
+      : today.subtract(Duration(days: 30)).toIso8601String();
   String _finish = (params != null && params.containsKey('Finish'))
       ? params['Finish']
-      : today.subtract(Duration(hours: 7)).toIso8601String();
+      : today.toIso8601String();
 
   String _auth = (appAuth.user != null && appAuth.user?.id != null)
       ? appAuth.user!.id!
@@ -139,6 +139,7 @@ dynamic getFilterRequest({
     if(params.containsKey('Offset')) payload['Offset'] = params['Offset'];
     if(params.containsKey('Limit')) payload['Limit'] = params['Limit'];
     if(params.containsKey('Filter')) payload['Filter'] = params['Filter'];
+    if(params.containsKey('ActiveOnly')) payload['ActiveOnly'] = params['ActiveOnly'];
   }
 
   return payload;

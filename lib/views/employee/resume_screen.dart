@@ -1122,7 +1122,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
             .currentState!
             .fields['IdentificationsStartPicker_' + data['Type'].toString()]!
             .value
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toIso8601String();
       }
 
@@ -1133,7 +1133,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
             .currentState!
             .fields['IdentificationsFinishPicker_' + data['Type'].toString()]!
             .value
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toIso8601String();
       }
 
@@ -1256,7 +1256,7 @@ class _ResumeScreenState extends State<ResumeScreen> {
         _data.employeeID = globals.appAuth.user?.id;
         _data.employeeName = globals.appAuth.user?.fullName;
         _data.birthdate =
-            value['BirthdatePicker'].add(Duration(hours: 7)).toIso8601String();
+            value['BirthdatePicker'].toIso8601String();
 
         if (_data.address == null) {
           _data.address = AddressModel();

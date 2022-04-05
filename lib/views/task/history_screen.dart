@@ -185,7 +185,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
 
         DateTime _submitDateTime = DateFormat('yyyy-MM-ddTHH:mm:ss')
             .parse(v.submitDateTime!, false)
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toLocal();
 
         MaterialColor _colorStatus = Colors.lightBlue;

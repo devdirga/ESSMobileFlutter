@@ -30,8 +30,8 @@ class _SurveyListScreenState extends State<SurveyListScreen> {
 
   Map<String, dynamic> getValue = {
     'Start':
-        DateTime.now().subtract(Duration(days: 8, hours: 7)).toIso8601String(),
-    'Finish': DateTime.now().subtract(Duration(days: 1, hours: 7)).toIso8601String(),
+        DateTime.now().subtract(Duration(days: 7)).toIso8601String(),
+    'Finish': DateTime.now().toIso8601String(),
   };
 
   bool _loading = false;

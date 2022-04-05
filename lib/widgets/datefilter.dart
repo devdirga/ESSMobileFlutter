@@ -36,23 +36,23 @@ class _DateFilterDialogState extends State<DateFilterDialog> {
   TextEditingController _filterDateStart = TextEditingController();
   TextEditingController _filterDateEnd = TextEditingController();
 
-  DateTime _start = globals.firstDayOfMonth;
-  DateTime _finish = globals.lastDayOfMonth;
+  DateTime _start = globals.today.subtract(Duration(days: 7));
+  DateTime _finish = globals.today;
 
   @override
   void initState() {
     super.initState();
 
     if (globals.filterValue.isNotEmpty) {
-      if (globals.filterValue.containsKey('start')) {
+      if (globals.filterValue.containsKey('Start')) {
         _start = DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(globals.filterValue['start'], true)
+            .parse(globals.filterValue['Start'], true)
             .toLocal();
       }
 
-      if (globals.filterValue.containsKey('finish')) {
+      if (globals.filterValue.containsKey('Finish')) {
         _finish = DateFormat('yyyy-MM-ddTHH:mm:ss')
-            .parse(globals.filterValue['finish'], true)
+            .parse(globals.filterValue['Finish'], true)
             .toLocal();
       }
     }
@@ -142,12 +142,12 @@ class _DateFilterDialogState extends State<DateFilterDialog> {
             Map<String, dynamic> getValue = {
               'Start': DateFormat('dd/MM/yyyy')
                   .parse(_filterDateStart.text)
-                  .subtract(Duration(hours: 7))
+                  //.subtract(Duration(hours: 7))
                   .toIso8601String(),
               'Finish': DateFormat('dd/MM/yyyy')
                   .parse(_filterDateEnd.text)
                   .add(Duration(hours: 23, minutes: 59))
-                  .subtract(Duration(hours: 7))
+                  //.subtract(Duration(hours: 7))
                   .toIso8601String(),
             };
 

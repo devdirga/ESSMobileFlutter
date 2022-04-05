@@ -601,7 +601,7 @@ class _FamilyEntryScreenState extends State<FamilyEntryScreen> {
       _data.relationshipDescription = value['RelationshipDescription'];
       _data.nik = value['NIK'];
       _data.birthdate =
-          value['BirthdatePicker'].add(Duration(hours: 7)).toIso8601String();
+          value['BirthdatePicker'].toIso8601String();
       _data.birthplace = value['Birthplace'].toString().trim();
 
       _gender.asMap().forEach((k, v) {

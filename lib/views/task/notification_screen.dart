@@ -145,7 +145,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
 	DateTime _timeStamp = DateFormat('yyyy-MM-ddTHH:mm:ss')
             .parse(items.timestamp!, false)
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toLocal(); 
 	MaterialColor _colorStatus = items.read! ? Colors.grey : Colors.lightBlue; 
 	

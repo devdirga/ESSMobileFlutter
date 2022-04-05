@@ -724,8 +724,8 @@ class _LeaveRequestScreenState extends State<LeaveRequestScreen> {
 
   void _checkLeaveExists(DateTime start, DateTime finish) {
     Map<String, dynamic> getValue = {
-      'Start': start.subtract(Duration(hours: 7)).toIso8601String(),
-      'Finish': finish.subtract(Duration(hours: 7)).toIso8601String(),
+      'Start': start.toIso8601String(),
+      'Finish': finish.toIso8601String(),
       // 'finish': finish
       //     .add(Duration(hours: 23, minutes: 59))
       //     .subtract(Duration(hours: 7))

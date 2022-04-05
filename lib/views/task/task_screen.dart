@@ -17,7 +17,8 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  dynamic _filterReq;
+  dynamic _filterReqActive;
+  dynamic _filterReqHistory;
 
   int tabIndex = 0;
 
@@ -37,12 +38,28 @@ class _TaskScreenState extends State<TaskScreen> {
       }
     });
 
-    Map<String, dynamic> getValue = {
-      'Offset': 0
+    Map<String, dynamic> getValue1 = {
+      'Limit': 10,
+      'Offset': 0,
+      'ActiveOnly': true,
+      'Range': {
+        'Start': DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+        'Finish': DateTime.now().toIso8601String(),
+      }
     };
 
-    _filterReq = globals.getFilterRequest(params: getValue);
-    
+    Map<String, dynamic> getValue2 = {
+      'Limit': 10,
+      'Offset': 0,
+      'ActiveOnly': false,
+      'Range': {
+        'Start': DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
+        'Finish': DateTime.now().toIso8601String(),
+      }
+    };
+
+    _filterReqActive = globals.getFilterRequest(params: getValue1);
+    _filterReqHistory = globals.getFilterRequest(params: getValue2);
   }
 
   @override
@@ -72,8 +89,8 @@ class _TaskScreenState extends State<TaskScreen> {
         ),
         main: TabBarView(
           children: [
-            TaskActiveScreen(_filterReq),
-            TaskHistoryScreen(_filterReq),
+            TaskActiveScreen(_filterReqActive),
+            TaskHistoryScreen(_filterReqHistory),
           ],
         ),
         drawer: AppDrawer(tokenUrl: globals.appAuth.data),
@@ -82,7 +99,8 @@ class _TaskScreenState extends State<TaskScreen> {
             filter: () {
               AppDateFilter(context).show(yes: (val) {
                 setState(() {
-                  _filterReq = globals.getFilterRequest(params: val);
+                  _filterReqActive = globals.getFilterRequest(params: val);
+                  _filterReqHistory = globals.getFilterRequest(params: val);
                 });
               });
             },

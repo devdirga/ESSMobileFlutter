@@ -61,7 +61,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _taskActive = _commonService.mTaskActive(widget.filterRequest);
+    _taskActive = _commonService.taskHistory(widget.filterRequest);
 
     return _container(context);
   }
@@ -132,7 +132,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
                     errorMessage: _response.message,
                     onRetryPressed: () => setState(() {
                       _taskActive =
-                          _commonService.mTaskActive(widget.filterRequest);
+                          _commonService.taskHistory(widget.filterRequest);
                     }),
                   );
                 }
@@ -142,7 +142,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
                   errorMessage: snapshot.data!.message,
                   onRetryPressed: () => setState(() {
                     _taskActive =
-                        _commonService.mTaskActive(widget.filterRequest);
+                        _commonService.taskHistory(widget.filterRequest);
                   }),
                 );
             }
@@ -178,7 +178,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
 
         DateTime _submitDateTime = DateFormat('yyyy-MM-ddTHH:mm:ss')
             .parse(v.submitDateTime!, false)
-            .add(Duration(hours: 7))
+            //.add(Duration(hours: 7))
             .toLocal();
 
         _children.add(
@@ -334,7 +334,7 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
   }
 
   void _countTask() async {
-    _commonService.mTaskActive(globals.getFilterRequest()).then((v) {
+    _commonService.mTaskActive(widget.filterRequest).then((v) {
       if (v.status == ApiStatus.COMPLETED) {
         if (this.mounted) {
           setState(() {

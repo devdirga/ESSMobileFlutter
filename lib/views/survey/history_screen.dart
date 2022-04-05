@@ -29,8 +29,8 @@ class _SurveyHistoryScreenState extends State<SurveyHistoryScreen> {
 
   Map<String, dynamic> getValue = {
     'Start':
-        DateTime.now().subtract(Duration(days: 60, hours: 7)).toIso8601String(),
-    'Finish': DateTime.now().subtract(Duration(days: 1, hours: 7)).toIso8601String(),
+        DateTime.now().subtract(Duration(days: 30)).toIso8601String(),
+    'Finish': DateTime.now().toIso8601String(),
   };
 
   @override

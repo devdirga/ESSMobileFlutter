@@ -46,8 +46,8 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
 
   Map<String, dynamic> getValue = {
     'Start':
-        DateTime.now().subtract(Duration(days: 8, hours: 7)).toIso8601String(),
-    'Finish': DateTime.now().subtract(Duration(days: 1, hours: 7)).toIso8601String(),
+        DateTime.now().subtract(Duration(days: 7)).toIso8601String(),
+    'Finish': DateTime.now().toIso8601String(),
   };
 
   @override
@@ -513,7 +513,7 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
         "operator": "gte",
         "value": DateFormat('dd/MM/yyyy')
           .parse(_filterDateStart.text)
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String()
       });
     }
@@ -523,7 +523,7 @@ class _ResolutionScreenState extends State<ResolutionScreen> {
         "operator": "lte",
         "value": DateFormat('dd/MM/yyyy')
           .parse(_filterDateEnd.text)
-          .subtract(Duration(hours: 7))
+          //.subtract(Duration(hours: 7))
           .toIso8601String()
       });
     }
