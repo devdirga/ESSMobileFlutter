@@ -56,10 +56,7 @@ dependencies:
   webview_flutter: ^2.8.0
   flutter_html: ^2.2.1
 
-  excel:
-    git:
-      url: https://github.com/justkawal/excel.git
-      ref: null-safety
+  excel: 2.0.0-null-safety
 
   flutter_map:
   latlong: ^0.6.1
@@ -87,7 +84,6 @@ dev_dependencies:
 
 flutter_native_splash:
   background_image: "assets/images/splash.png"
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

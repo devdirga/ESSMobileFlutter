@@ -83,6 +83,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
         }, child: new Text("OK"))
       ]
     ));
+
   }
 
   getCurrentLocation() async {
@@ -200,13 +201,12 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                     ), 
                     Flexible(
                       child: Container(
+                        margin: EdgeInsets.only(top: 5.0),
                         width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: (){},
-                          label: Text('Current location : ${currentLocation.latitude.toString()} , ${currentLocation.longitude.toString()}'),
-                          icon: Icon(Icons.info_outlined),
-                          style: ElevatedButton.styleFrom(primary: Colors.black)
-                        )
+                        child: RichText(text: TextSpan(
+                          text: 'Current location : ${currentLocation.latitude.toString()} , ${currentLocation.longitude.toString()}',
+                          style: DefaultTextStyle.of(context).style                          
+                        ))
                       )
                     ),
                     Flexible(
@@ -476,41 +476,31 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
             AppSnackBar.danger(context, upl.message);
           }
           if (upl.status == ApiStatus.COMPLETED) {
-
-            if (upl.data['StatusCode'] == 200) {
-              // Navigator.pop(context);
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              // Routes.attendance,
-              // ModalRoute.withName(Routes.attendance));
-
+            if (upl.data['StatusCode'] == 200) {              
               if(temporary){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      action: SnackBarAction(label: 'OK',onPressed: () {
+                showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
+                  title: new Text("Success"),
+                  content: new Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
+                  actions: <Widget>[
+                    new ElevatedButton(
+                      onPressed: (){
                         Navigator.pop(context);
                         Navigator.of(context).pushNamedAndRemoveUntil(Routes.survey, ModalRoute.withName(Routes.survey));
-                      }),
-                      // content:  Text('${upl.data['Message'].toString()}'),
-                      content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
-                      duration: const Duration(milliseconds: 10000),
-                      behavior: SnackBarBehavior.floating
-                    )
-                );
+                      }, child: new Text("OK"))
+                  ]
+                ));
               } else {
-                
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      action: SnackBarAction(label: 'OK',onPressed: () {}),
-                      content:  Text('${upl.data['Message'].toString()}'),
-                      // content: Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
-                      duration: const Duration(milliseconds: 5000),
-                      behavior: SnackBarBehavior.floating
-                    )
-                );
+                showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
+                  title: new Text("Success"),
+                  content: new Text('${upl.data['Message'].toString()}'),
+                  actions: <Widget>[
+                    new ElevatedButton(
+                      onPressed: (){
+                        Navigator.pop(context);
+                      }, child: new Text("OK"))
+                  ]
+                ));
               }
-              
-              // to another tab
-              // Navigator.push(context, MaterialPageRoute(builder: (context)=> AttendanceScreen(selectedPage: 1)));
             }
             if (upl.data['StatusCode'] == 400) {
               setState(() {

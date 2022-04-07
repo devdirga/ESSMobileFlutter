@@ -200,12 +200,10 @@ packages:
   excel:
     dependency: "direct main"
     description:
-      path: "."
-      ref: null-safety
-      resolved-ref: "4f38529e824f27d6be0a123c0f2dddc68c151af8"
-      url: "https://github.com/justkawal/excel.git"
-    source: git
-    version: "2.0.0-null-safety-4"
+      name: excel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0-null-safety"
   fake_async:
     dependency: transitive
     description:
