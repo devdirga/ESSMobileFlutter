@@ -188,7 +188,7 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
                       flex: 10,
                       child: (_entities.length > 0) ? 
                         new FlutterMap(
-                        options: new MapOptions(center: new latlng.LatLng(currentLocation.latitude!, currentLocation.longitude!)),
+                        options: new MapOptions(center: new latlng.LatLng(currentLocation.latitude!, currentLocation.longitude!), zoom: 35),
                         layers: [
                           new TileLayerOptions(
                             urlTemplate: _entities.first['mapboxTemplate'],
