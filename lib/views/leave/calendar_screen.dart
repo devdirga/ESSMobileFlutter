@@ -36,7 +36,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ValueNotifier(<EventCalendar>[]);
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-  DateTime _focusedDay = DateTime.now();
+  DateTime _focusedDay = globals.today;
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;

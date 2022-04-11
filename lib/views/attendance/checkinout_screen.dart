@@ -6,6 +6,7 @@ import 'package:ess_mobile/services/attendance_service.dart';
 import 'package:ess_mobile/services/survey_service.dart';
 import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/utils/shared_preference.dart';
+import 'package:ess_mobile/widgets/alert.dart';
 import 'package:ess_mobile/widgets/loading.dart';
 import 'package:ess_mobile/widgets/loadingtext.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';
@@ -66,24 +67,18 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
 
   _showDialog() async {
     await Future.delayed(Duration(milliseconds: 50));
-    
-    showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
-      title: new Text("Location Authorization"),
-      content: new Text("In order to guarantee the app functionality, the location access is absolute neccessary.\n" + 
-      "Therefore you should allow access to the location of this device.\n"+
-      "ESS TPS will collect location data even when your app is in background to enable:\n"+
-      "- checking your current location for Attendance\n"+
-      "- measuring the distance between your current location for validate absence"),
-      actions: <Widget>[
-        new ElevatedButton(
-          onPressed: (){
-            _sharedPrefsHelper.saveDisclaimerLoc(true);
-            getCurrentLocation();
-            Navigator.of(context).pop();
-        }, child: new Text("OK"))
-      ]
-    ));
-
+    AppAlert(context).basicAlert(
+      title: 'Location Authorization',
+      desc: 'In order to guarantee the app functionality, the location access is absolute neccessary.\n' + 
+      'Therefore you should allow access to the location of this device.\n'+
+      'ESS TPS will collect location data even when your app is in background to enable:\n'+
+      '- checking your current location for Attendance\n'+
+      '- measuring the distance between your current location for validate absence',
+      yes: () {
+        _sharedPrefsHelper.saveDisclaimerLoc(true);
+        getCurrentLocation();
+      }
+    );
   }
 
   getCurrentLocation() async {
@@ -478,28 +473,18 @@ class _ChechInOutScreenState extends State<ChechInOutScreen> {
           if (upl.status == ApiStatus.COMPLETED) {
             if (upl.data['StatusCode'] == 200) {              
               if(temporary){
-                showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
-                  title: new Text("Success"),
-                  content: new Text('Ada survey yang harus diisi, di mohon membuka halaman survey'),
-                  actions: <Widget>[
-                    new ElevatedButton(
-                      onPressed: (){
-                        Navigator.pop(context);
-                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.survey, ModalRoute.withName(Routes.survey));
-                      }, child: new Text("OK"))
-                  ]
-                ));
+                AppAlert(context).basicAlert(
+                  title: 'Success',
+                  desc: 'Ada survey yang harus diisi, di mohon membuka halaman survey.',
+                  yes: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(Routes.survey, ModalRoute.withName(Routes.survey));
+                  } 
+                );
               } else {
-                showDialog(context: context, builder: (BuildContext context) => new AlertDialog(
-                  title: new Text("Success"),
-                  content: new Text('${upl.data['Message'].toString()}'),
-                  actions: <Widget>[
-                    new ElevatedButton(
-                      onPressed: (){
-                        Navigator.pop(context);
-                      }, child: new Text("OK"))
-                  ]
-                ));
+                AppAlert(context).basicAlert(
+                  title: 'Success',
+                  desc: '${upl.data['Message'].toString()}'
+                );
               }
             }
             if (upl.data['StatusCode'] == 400) {

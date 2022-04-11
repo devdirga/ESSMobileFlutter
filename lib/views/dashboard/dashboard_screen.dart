@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_version/new_version.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -34,6 +35,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final LeaveService _leaveService = LeaveService();
   //final TrainingService _trainingService = TrainingService();
+  final newVersion = NewVersion();
   final TimeManagementService _timeManagementService = TimeManagementService();
   final CommonService _commonService = CommonService();
   final AuthProvider _authProvider = AuthProvider();
@@ -46,18 +48,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   late FirebaseMessaging _messaging;
 
-  Future<void> _initPackageInfo() async {
+  void _initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
       globals.packageInfo = info;
     });
   }
 
+  void _checkVersioning(NewVersion newVersion) async {
+    final status = await newVersion.getVersionStatus();
+    if (status != null) {
+      int _checkVersion = globals.compareVersion(status.localVersion, status.storeVersion);
+      if(_checkVersion == -1){    
+        newVersion.showUpdateDialog(
+          context: context,
+          versionStatus: status,
+          allowDismissal: false
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _initPackageInfo();
-
+    _checkVersioning(newVersion);
+    
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status != AppStatus.Authenticated) {
         context.read<AuthProvider>().signOut();
@@ -73,7 +90,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     LocalNotificationService.initialize(context);
 
     _messaging = FirebaseMessaging.instance;
-
     _messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -84,7 +100,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       sound: true,
     );
 
-   
     _messaging.getToken().then((String? _token) async {
       Map<String, dynamic> fcmUserData = {
         'Username': globals.appAuth.user?.username,
@@ -556,6 +571,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
 
+    /*
     _commonService.getLatestVersion().then((v) async {
       if (v.data.data.length > 0){
         if(Platform.isAndroid){
@@ -612,7 +628,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         }
       }
-    }); 
+    }); */
   }
 
   @override

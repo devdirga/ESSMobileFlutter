@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/rest_api.dart';
 import 'package:ess_mobile/utils/api_response.dart';
-import 'package:ess_mobile/utils/shared_preference.dart';
+import 'package:ess_mobile/utils/preference.dart';
 import 'package:ess_mobile/models/auth_model.dart';
 import 'package:ess_mobile/models/response_model.dart';
 
@@ -19,7 +19,7 @@ enum AppStatus {
 }
 
 class AuthProvider extends ChangeNotifier {
-  AppSharedPreference _sharedPrefsHelper = AppSharedPreference();
+  late AppPreferences _prefsHelper;
   RestApi _restApi = RestApi();
   AuthModel _auth = AuthModel();
   AppStatus _status = AppStatus.Uninitialized;
@@ -32,9 +32,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> initAuthUser() async {
-    String? _authUser = await _sharedPrefsHelper.authUser;
+    _prefsHelper = await AppPreferences.getInstance();
+    String _authUser = _prefsHelper.authUser;
 
-    if (_authUser != null) {
+    if (_authUser != "") {
       try {
         final Map<String, dynamic> jsonResponse = jsonDecode(_authUser);
 
@@ -115,8 +116,8 @@ class AuthProvider extends ChangeNotifier {
         if(response['StatusCode'] == 200){
           _apiResponse = ApiResponse.completed(response);
           _auth = AuthModel.fromJson(response['Data']);
-          _sharedPrefsHelper.saveLoginData(json.encode(payload));
-          _sharedPrefsHelper.saveAuthUser(jsonEncode(_auth));
+          _prefsHelper.saveLoginData(json.encode(payload));
+          _prefsHelper.saveAuthUser(jsonEncode(_auth));
 
           if (_auth.success == true) {
             _status = AppStatus.Authenticated;
@@ -144,7 +145,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future signOut() async {
     _auth = AuthModel();
-    _sharedPrefsHelper.removeAuthUser();
+    _prefsHelper.removeAuthUser();
     _status = AppStatus.Unauthenticated;
 
     notifyListeners();

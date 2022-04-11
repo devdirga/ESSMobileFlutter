@@ -203,7 +203,7 @@ packages:
       name: excel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-null-safety"
+    version: "2.0.0-null-safety-3"
   fake_async:
     dependency: transitive
     description:
@@ -396,48 +396,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  flutter_secure_storage:
-    dependency: "direct main"
-    description:
-      name: flutter_secure_storage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.2"
-  flutter_secure_storage_linux:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
-  flutter_secure_storage_macos:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_macos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
-  flutter_secure_storage_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
-  flutter_secure_storage_web:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
-  flutter_secure_storage_windows:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.2"
   flutter_svg:
     dependency: transitive
     description:
@@ -462,6 +420,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.4.0"
+  hive:
+    dependency: "direct main"
+    description:
+      name: hive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
+  hive_flutter:
+    dependency: "direct main"
+    description:
+      name: hive_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   html:
     dependency: transitive
     description:
@@ -651,6 +623,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  new_version:
+    dependency: "direct main"
+    description:
+      name: new_version
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   numerus:
     dependency: transitive
     description:

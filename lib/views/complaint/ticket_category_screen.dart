@@ -31,9 +31,15 @@ class _TicketCategoriesScreenState extends State<TicketCategoriesScreen> {
   List<String> _absenceCode = [];
 
   Map<String, dynamic> getValue = {
-    'Start':
-        DateTime.now().subtract(Duration(days: 7)).toIso8601String(),
-    'Finish': DateTime.now().toIso8601String(),
+    'Start': globals.today.subtract(Duration(
+      days: 7,
+      hours: globals.today.hour, 
+      minutes: globals.today.minute, 
+      seconds: globals.today.second, 
+      milliseconds: globals.today.millisecond, 
+      microseconds: globals.today.microsecond
+    )).toIso8601String(),
+    'Finish': globals.today.toIso8601String(),
   };
 
   @override

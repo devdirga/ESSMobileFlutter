@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -11,6 +12,7 @@ import 'package:ess_mobile/providers/theme_provider.dart';
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Hive.initFlutter();
   await Firebase.initializeApp();
   await FlutterDownloader.initialize(debug: false);
 

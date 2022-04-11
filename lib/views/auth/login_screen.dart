@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:new_version/new_version.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ import 'package:ess_mobile/utils/validate.dart';
 import 'package:ess_mobile/widgets/alert.dart';
 import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/utils/biometric_auth.dart';
-import 'package:ess_mobile/utils/shared_preference.dart';
+import 'package:ess_mobile/utils/preference.dart';
 import 'package:ess_mobile/widgets/logo.dart';
 import 'package:ess_mobile/widgets/snackbar.dart';
 import 'package:ess_mobile/widgets/textfield.dart';
@@ -29,12 +30,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final CommonService _commonService = CommonService();
-  AppSharedPreference _sharedPrefsHelper = AppSharedPreference(); 
+  final newVersion = NewVersion();
+  late AppPreferences _prefsHelper; 
   TextEditingController _idController = TextEditingController(text: '');
   TextEditingController _passwordController = TextEditingController(text: '');
   
   bool _obscureText = true;
-  String? signInData;
+  String signInData = '';
   int loginType = 0;
 
   void _toggle() {
@@ -43,17 +45,41 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future<void> _initPackageInfo() async {
+  void _initPackageInfo() async {
     final info = await PackageInfo.fromPlatform();
     setState(() {
       globals.packageInfo = info;
     });
   }
 
+  void _checkVersioning(NewVersion newVersion) async {
+    final status = await newVersion.getVersionStatus();
+    if (status != null) {
+      int _checkVersion = globals.compareVersion(status.localVersion, status.storeVersion);
+      if(_checkVersion == -1){    
+        newVersion.showUpdateDialog(
+          context: context,
+          versionStatus: status,
+          allowDismissal: false
+        );
+      }
+    }
+  }
+
+  void _initPreference() async {
+    _prefsHelper = await AppPreferences.getInstance();
+    setState(() {
+      signInData = _prefsHelper.loginData;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+  
     _initPackageInfo();
+    _checkVersioning(newVersion);
+    _initPreference();
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (context.read<AuthProvider>().status == AppStatus.Registered) {
@@ -66,13 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
 
-    _sharedPrefsHelper.loginData.then((value) {
-      setState(() {
-        signInData = value;
-      });
-    });
-
-    _commonService.getLatestVersion().then((v) async {
+    /*_commonService.getLatestVersion().then((v) async {
       if (v.data.data.length > 0){
         if(Platform.isAndroid){
           String _latest = v.data.data[0]['Version'];
@@ -129,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     }); 
-      
+    */
   }
 
   @override
@@ -280,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                       SizedBox(height: 20),
-                      signInData != null ? _buildBiometricLogin(context) : Center(),
+                      signInData != '' ? _buildBiometricLogin(context) : Center(),
                       SizedBox(height: 50),
                       Text(
                         AppLocalizations.of(context)
@@ -324,8 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
           bool bioAuth = await BioAuthentication.authenticateWithBiometrics();
 
           if(bioAuth){
-            String? loginData = await _sharedPrefsHelper.loginData;
-            if (loginData != null) {
+            String loginData = _prefsHelper.loginData;
+            if (loginData != '') {
               setState(() {
                 loginType = 2;
               });

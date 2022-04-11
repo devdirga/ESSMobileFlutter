@@ -629,10 +629,19 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
   }
 
   void _track(TaskModel item) async {
+    setState(() {
+      _loading = true;
+    });
+
     try {
       _commonService
         .taskWorkflowsByInstance(item.submitEmployeeID!, item.instanceId!)
         .then((v) {
+
+      setState(() {
+        _loading = false;
+      });
+      
       if (v.status == ApiStatus.COMPLETED) {
         if (v.data.data != null) {
           UpdateRequestModel _item = v.data.data;
