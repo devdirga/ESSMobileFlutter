@@ -194,7 +194,6 @@ class AppAlert {
     String title = '',
     String desc = '',
     Function? yes,
-    Function? cancel,
   }) async {
     Alert(
       context: context,
@@ -205,6 +204,7 @@ class AppAlert {
         animationDuration: Duration(milliseconds: 400),
         titleStyle: Theme.of(context).textTheme.headline6!,
         descStyle: Theme.of(context).textTheme.subtitle1!,
+        descTextAlign: TextAlign.justify 
       ),
       title: title,
       desc: desc,
@@ -220,20 +220,6 @@ class AppAlert {
 
             if (yes != null) {
               yes();
-            }
-          },
-        ),
-        DialogButton(
-          child: Text(
-            AppLocalizations.of(context).translate('Cancel'),
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.blue,
-          onPressed: () async {
-            Navigator.pop(context);
-
-            if (cancel != null) {
-              cancel();
             }
           },
         )

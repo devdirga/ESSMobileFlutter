@@ -95,7 +95,15 @@ dynamic getFilterRequest({
 
   String _start = (params != null && params.containsKey('Start'))
       ? params['Start']
-      : today.subtract(Duration(days: 30)).toIso8601String();
+      : today.subtract(Duration(
+        days: 30, 
+        hours: today.hour, 
+        minutes: today.minute, 
+        seconds: today.second, 
+        milliseconds: today.millisecond, 
+        microseconds: today.microsecond
+      )).toIso8601String();
+      
   String _finish = (params != null && params.containsKey('Finish'))
       ? params['Finish']
       : today.toIso8601String();

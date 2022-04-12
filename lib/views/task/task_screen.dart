@@ -42,20 +42,31 @@ class _TaskScreenState extends State<TaskScreen> {
       'Limit': 10,
       'Offset': 0,
       'ActiveOnly': true,
-      'Range': {
-        'Start': DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
-        'Finish': DateTime.now().toIso8601String(),
-      }
+      'Start': globals.today.subtract(Duration(
+          days: 7,
+          hours: globals.today.hour, 
+          minutes: globals.today.minute, 
+          seconds: globals.today.second, 
+          milliseconds: globals.today.millisecond, 
+          microseconds: globals.today.microsecond
+        )).toIso8601String(),
+      'Finish': globals.today.toIso8601String(),
     };
 
     Map<String, dynamic> getValue2 = {
       'Limit': 10,
       'Offset': 0,
       'ActiveOnly': false,
-      'Range': {
-        'Start': DateTime.now().subtract(Duration(days: 1)).toIso8601String(),
-        'Finish': DateTime.now().toIso8601String(),
-      }
+      'Start': globals.today.subtract(Duration(
+          days: 7,
+          hours: globals.today.hour, 
+          minutes: globals.today.minute, 
+          seconds: globals.today.second, 
+          milliseconds: globals.today.millisecond, 
+          microseconds: globals.today.microsecond
+        )).toIso8601String(),
+      'Finish': globals.today.toIso8601String(),
+      
     };
 
     _filterReqActive = globals.getFilterRequest(params: getValue1);
