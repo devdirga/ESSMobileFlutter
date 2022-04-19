@@ -463,7 +463,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       "Filter":""
     }; 
 
-    _commonService.mTaskActive(globals.getFilterRequest()).then((v) {
+    Map<String, dynamic> filterTask = {
+      'Limit': 10,
+      'Offset': 0,
+      'ActiveOnly': true
+    };
+
+    _commonService.taskHistory(globals.getFilterRequest(params: filterTask)).then((v) {
       if (v.status == ApiStatus.COMPLETED) {
         if (this.mounted) {
           setState(() {

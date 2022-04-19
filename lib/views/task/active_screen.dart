@@ -334,7 +334,16 @@ class _TaskActiveScreenState extends State<TaskActiveScreen> {
   }
 
   void _countTask() async {
-    _commonService.mTaskActive(widget.filterRequest).then((v) {
+    /*_commonService.mTaskActive(widget.filterRequest).then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (this.mounted) {
+          setState(() {
+            globals.totalTask = v.data.data.length;
+          });
+        }
+      }
+    });*/
+    _commonService.taskHistory(widget.filterRequest).then((v) {
       if (v.status == ApiStatus.COMPLETED) {
         if (this.mounted) {
           setState(() {

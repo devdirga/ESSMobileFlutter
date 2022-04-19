@@ -4,9 +4,12 @@ import 'package:ess_mobile/widgets/scaffold.dart';
 import 'package:ess_mobile/widgets/drawer.dart';
 import 'package:ess_mobile/widgets/actionbutton.dart';
 import 'package:ess_mobile/providers/auth_provider.dart';
+import 'package:ess_mobile/utils/api_response.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
 import 'package:ess_mobile/utils/routes.dart';
+import 'package:ess_mobile/models/leave_model.dart';
+import 'package:ess_mobile/services/leave_service.dart';
 import 'package:ess_mobile/views/leave/calendar_screen.dart';
 import 'package:ess_mobile/views/leave/history_screen.dart';
 import 'package:ess_mobile/views/leave/subordinate_screen.dart';
@@ -17,7 +20,10 @@ class LeaveScreen extends StatefulWidget {
 }
 
 class _LeaveScreenState extends State<LeaveScreen> {
+  final LeaveService _leaveService = LeaveService();
+  LeaveInfoModel _leaveInfo = LeaveInfoModel();
   dynamic _filterReq;
+  int _totalPending = 0;
 
   @override
   void initState() {
@@ -42,7 +48,18 @@ class _LeaveScreenState extends State<LeaveScreen> {
 
     _filterReq = globals.getFilterRequest(params: getValue);
 
-    
+    _leaveService.leaveInfo(_filterReq).then((v) {
+      if (v.status == ApiStatus.COMPLETED) {
+        if (v.data.data != null) {
+          if (this.mounted) {
+            setState(() {
+              _leaveInfo = v.data.data;
+              _totalPending = _leaveInfo.totalPending ?? 0;
+            });
+          } 
+        }
+      }
+    });
   }
 
   @override
@@ -78,7 +95,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
         ),
         drawer: AppDrawer(tokenUrl: globals.appAuth.data),
         actionButton: AppActionButton(
-          create: () {
+          create: _totalPending > 0 ? null : (){
             Navigator.pushNamed(
               context,
               Routes.leaveRequest,

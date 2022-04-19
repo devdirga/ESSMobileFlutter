@@ -96,7 +96,7 @@ dynamic getFilterRequest({
   String _start = (params != null && params.containsKey('Start'))
       ? params['Start']
       : today.subtract(Duration(
-        days: 30, 
+        days: 7, 
         hours: today.hour, 
         minutes: today.minute, 
         seconds: today.second, 

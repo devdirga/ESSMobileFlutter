@@ -45,6 +45,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
   bool _loading = false;
   
   List<DataRow> _dataRows = <DataRow>[];
+  List<Widget> _dataWidgets = <Widget>[];
 
   @override
   void initState() {
@@ -61,16 +62,13 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
         );
       }
     });
-
-    _taskHistory = _commonService.taskHistory(widget.filterRequest);
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: _container(context),
-    );
+    _taskHistory = _commonService.taskHistory(widget.filterRequest);
+
+    return _container(context);
   }
 
   Widget _container(BuildContext context) {
@@ -629,6 +627,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
   }
 
   void _track(TaskModel item) async {
+    
     setState(() {
       _loading = true;
     });
@@ -650,14 +649,52 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               .toLocal();
           String _formatSubmitDate = DateFormat('dd/MM/yyyy HH:mm').format(_submitDate);
           _dataRows.clear();
+          _dataWidgets.clear();
           
           _item.workFlows!.forEach((v) {
             DateTime _actionDate = DateFormat('yyyy-MM-ddTHH:mm:ss')
               .parse(v.actionDateTime!, false)
               .toLocal();
             String _formatActionDate = DateFormat('dd/MM/yyyy').format(_actionDate) +
-              '\n'+ DateFormat('HH:mm').format(_actionDate);
-            _dataRows.add(DataRow(
+               DateFormat('HH:mm').format(_actionDate);
+
+            MaterialColor _colorStatus = Colors.lightBlue;
+            switch (v.trackingStatus) {
+              case 1:
+                _colorStatus = Colors.green;
+                break;
+              case 2:
+                _colorStatus = Colors.orange;
+                break;
+              case 3:
+                _colorStatus = Colors.red;
+                break;
+            }
+
+            _dataWidgets.add(ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(
+                Icons.circle,
+                color: _colorStatus,
+              ),
+              title: Text(
+                  v.stepName.toString(), style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                )
+              ),
+              subtitle: v.actionDateTime !=  '1900-01-01T00:00:00Z' 
+                ? Text(
+                  v.trackingStatusDescription.toString() 
+                  + ' | ' + v.assignToEmployeeName.toString()
+                  + ' | ' + _formatActionDate.toString(), 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )
+                )
+                : Text(''),
+              
+            ));
+            /*_dataRows.add(DataRow(
               cells: <DataCell>[
                 DataCell(Text(v.stepName.toString(), style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -673,16 +710,28 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
                   : Text('')
                 ),
               ],
-            ));
+            ));*/
           });
 
+          MaterialColor _colorStatusItem = Colors.lightBlue;
+          switch (_item.trackingStatus) {
+            case 1:
+              _colorStatusItem = Colors.green;
+              break;
+            case 2:
+              _colorStatusItem = Colors.orange;
+              break;
+            case 3:
+              _colorStatusItem = Colors.red;
+              break;
+          }
           showDialog<void>(
             context: context,
             builder: (BuildContext context) => AlertDialog(
               insetPadding: EdgeInsets.all(10.0),
               title: Row(
                 children: space(10.0, <Widget>[
-                  Icon(Icons.date_range),
+                  Icon(Icons.airport_shuttle),
                   Text(
                     AppLocalizations.of(context).translate('Track'),
                   ),
@@ -690,7 +739,34 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
               ),
               content: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                child: Column(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(
+                        color: Colors.grey.shade300
+                      ),
+                      right: BorderSide(
+                        color: Colors.grey.shade300
+                      ) 
+                    )
+                  ),
+                  child: ExpansionTile(
+                    tilePadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    leading: Icon(
+                      Icons.circle,
+                      color: _colorStatusItem,
+                    ),
+                    title: Text(
+                      _item.title.toString(),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    initiallyExpanded: true,
+                    children: _dataWidgets,
+                  ),
+                )
+                /*child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(_item.title.toString()),
@@ -725,7 +801,7 @@ class _TaskHistoryScreenState extends State<TaskHistoryScreen> {
                       }
                     )
                   ]
-                )
+                )*/
               ),
               actions: <Widget>[
                 ElevatedButton(
