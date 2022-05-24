@@ -133,10 +133,9 @@ class _ResolutionEntryScreenState extends State<ResolutionEntryScreen> {
                         Html(
                           data: _init['Notes'],
                           onLinkTap: (url, _, __, ___ ) async {
-                            if (await canLaunch(url.toString())) {
-                              await launch(
-                                url.toString(),
-                              );
+                            var link = Uri.parse(url.toString());
+                            if (await canLaunchUrl(link)) {
+                              await launchUrl(link);
                             } else {
                               throw 'Could not launch $url';
                             }

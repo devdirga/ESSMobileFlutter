@@ -23,14 +23,21 @@ class _TimeAttendanceState extends State<TimeAttendance> {
 
   Map<String, dynamic> getValue = {
     'Start': globals.today.subtract(Duration(
-      days: 7,
+      days: 8,
       hours: globals.today.hour, 
       minutes: globals.today.minute, 
       seconds: globals.today.second, 
       milliseconds: globals.today.millisecond, 
       microseconds: globals.today.microsecond
     )).toIso8601String(),
-    'Finish': globals.today.toIso8601String(),
+    'Finish': globals.today.subtract(Duration(
+      days: 1,
+      hours: globals.today.hour, 
+      minutes: globals.today.minute, 
+      seconds: globals.today.second, 
+      milliseconds: globals.today.millisecond, 
+      microseconds: globals.today.microsecond
+    )).toIso8601String(),
   };
 
   @override
@@ -66,7 +73,7 @@ class _TimeAttendanceState extends State<TimeAttendance> {
                   Expanded(
                     child: Text(
                       AppLocalizations.of(context)
-                          .translate('RecentAttendances'),
+                          .translate('DailyAttendances'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,

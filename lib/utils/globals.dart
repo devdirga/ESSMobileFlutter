@@ -80,8 +80,10 @@ bool isNumeric(String? s) {
 }
 
 Future<void> launchInBrowser(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url, forceSafariVC: false, forceWebView: false);
+  var httpsUri = Uri.parse(url);
+
+  if (await canLaunchUrl(httpsUri)) {
+    await launchUrl(httpsUri);
   } else {
     throw 'Could not launch $url';
   }

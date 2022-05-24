@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-//import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:ess_mobile/utils/globals.dart' as globals;
 import 'package:ess_mobile/utils/localizations.dart';
 import 'package:ess_mobile/utils/routes.dart';
@@ -190,10 +187,6 @@ class AppDrawer extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.app_settings_alt),
               title: Text(AppLocalizations.of(context).translate('Attendance')),
-              // onTap: () async {
-              //   String _link = await createDynamicLink();
-              //   await launch(_link);
-              // },
               onTap: () {
                 Navigator.pushReplacementNamed(context, Routes.attendance);
               },
@@ -233,23 +226,4 @@ class AppDrawer extends StatelessWidget {
       ),
     );
   }
-
-  /*Future<String> createDynamicLink() async {
-    var parameters = DynamicLinkParameters(
-      uriPrefix: 'https://esstps.page.link',
-      link: Uri.parse('https://esstps.page.link.com/kara?token=' + tokenUrl!),
-      androidParameters: AndroidParameters(
-        packageName: "com.kara",
-      ),
-      iosParameters: IosParameters(
-        bundleId: "com.exmple.test",
-        appStoreId: '1498909115',
-      ),
-    );
-    var shortLink = await parameters.buildShortLink();
-    var shortUrl = shortLink.shortUrl;
-
-    return shortUrl.toString();
-  }
-  */
 }

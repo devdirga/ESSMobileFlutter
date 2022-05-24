@@ -391,12 +391,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
-      if (await canLaunch(message.uri)) {
-        await launch(
-          message.uri,
-          forceSafariVC: false,
-          forceWebView: false,
-        );
+      var link = Uri.parse(message.uri);
+      if (await canLaunchUrl(link)) {
+        await launchUrl(link);
       } else {
         await OpenFile.open(message.uri);
       }
